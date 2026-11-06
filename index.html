@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Inicio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 18px; border-radius: 25px; transition: all 0.3s ease; font-weight: 500; font-size: 15px; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; transform: translateY(-2px); }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; box-shadow: 0 4px 12px rgba(192,138,84,0.4); }
+        
+        .btn-login-nav {
+            background-color: transparent !important;
+            border: 2px solid #c08a54 !important;
+            color: #e8c99b !important;
+            font-weight: bold !important;
+        }
+        .btn-login-nav:hover {
+            background-color: #c08a54 !important;
+            color: white !important;
+        }
+
+        .portada { min-height: 85vh; padding: 60px 8%; display: flex; align-items: center; justify-content: space-between; gap: 50px; background: linear-gradient(135deg, #f7ebd9 0%, #ecd4b3 100%); position: relative; overflow: hidden; }
+        .portada-texto { max-width: 600px; z-index: 2; }
+        .etiqueta { display: inline-block; background-color: #f3dfc1; color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 12px; padding: 6px 14px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #e0c29f; }
+        .portada h1 { font-family: Georgia, serif; font-size: clamp(42px, 5.5vw, 68px); line-height: 1.1; margin: 15px 0 25px 0; color: #3b231a; }
+        .portada h1 span { color: #a76b3f; font-style: italic; }
+        .portada p { font-size: 18px; line-height: 1.8; color: #674a3b; margin-bottom: 35px; }
+        
+        .boton { display: inline-block; background-color: #6f4530; color: white; padding: 16px 32px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(111,69,48,0.25); font-size: 16px; }
+        .boton:hover { background-color: #a76b3f; transform: translateY(-4px); box-shadow: 0 10px 25px rgba(167,107,63,0.4); }
+
+        .portada img { width: 45%; max-width: 480px; height: 380px; object-fit: cover; border-radius: 30px; border: 8px solid #fff8ed; box-shadow: 0 20px 40px rgba(78,44,28,0.2); transition: transform 0.5s ease; }
+        .portada img:hover { transform: scale(1.02); }
+
+        .frase { text-align: center; padding: 90px 20px; background: linear-gradient(135deg, #422a20, #2f1d16); color: #fff3df; box-shadow: inset 0 10px 20px rgba(0,0,0,0.1); }
+        .frase h2 { font-family: Georgia, serif; font-style: italic; font-size: clamp(28px, 4vw, 42px); margin-bottom: 15px; letter-spacing: 0.5px; }
+        .frase p { color: #d4b58e; font-size: 17px; }
+
+        /* Estilos para la sección de comentarios */
+        .seccion-comentarios { max-width: 800px; margin: 50px auto; padding: 30px; background: #fff8ed; border-radius: 15px; box-shadow: 0 10px 25px rgba(62,39,35,0.08); border: 1px solid #e8c99b; }
+        .seccion-comentarios h3, .seccion-comentarios h4 { color: #38251e; font-family: Georgia, serif; margin-bottom: 20px; }
+        
+        /* Tarjeta de Promedio General */
+        .caja-promedio-general { background: linear-gradient(135deg, #38251e, #593724); color: #fff8ed; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-around; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .promedio-numero { font-size: 38px; font-weight: bold; color: #e8c99b; font-family: Georgia, serif; }
+
+        .form-comentario-box { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .form-comentario-box select, .form-comentario-box textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d4b58e; background: #fff; font-family: inherit; color: #3e2723; }
+        .lista-opiniones { display: flex; flex-direction: column; gap: 15px; }
+        .tarjeta-opinion { background: white; padding: 18px; border-radius: 10px; border-left: 5px solid #c08a54; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
+
+        footer { background-color: #241712; text-align: center; padding: 30px 15px; color: #d4b58e; font-size: 14px; border-top: 1px solid #3d271f; }
+
+        @media (max-width: 850px) {
+            .portada { flex-direction: column-reverse; text-align: center; justify-content: center; min-height: auto; padding: 50px 5%; }
+            .portada img { width: 100%; max-width: 100%; height: 300px; }
+            .portada-texto { max-width: 100%; }
+            .caja-promedio-general { flex-direction: column; text-align: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html" class="activo">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+            
+            <div style="position: relative; display: inline-block;">
+                <a href="#" id="btnSesionNav" onclick="manejarClickSesion(event)" class="btn-login-nav">👤 Iniciar Sesión</a>
+                
+                <!-- Menú desplegable para cerrar sesión o cambiar cuenta -->
+                <div id="menuDesplegable" style="display: none; position: absolute; right: 0; top: 45px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 180px; z-index: 3000; overflow: hidden; text-align: left;">
+                    <a href="#" onclick="cerrarSesionCliente()" style="display: block; padding: 12px 15px; color: #3e2723; text-decoration: none; font-size: 14px; border-bottom: 1px solid #f0e1cc;">🚪 Cerrar Sesión</a>
+                    <a href="#" onclick="cerrarSesionCliente()" style="display: block; padding: 12px 15px; color: #c08a54; text-decoration: none; font-size: 14px; font-weight: bold;">🔄 Cambiar de cuenta</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="portada">
+        <div class="portada-texto">
+            <span class="etiqueta">☕ Café artesanal de especialidad</span>
+            <h1>Cada taza,<br>un <span>momento especial.</span></h1>
+            <p>Descubre el aroma envolvente del café recién molido, sabores irresistibles y un santuario de paz perfecto para disfrutar, crear y compartir.</p>
+            <a href="ordenar.html" class="boton">¡Haz tu pedido aquí! →</a>
+        </div>
+        <img src="c.jpg" alt="Una deliciosa taza de café">
+    </section>
+
+    <section class="frase">
+        <h2>“La vida es demasiado corta para tomar mal café”.</h2>
+        <p>Tu pausa favorita comienza aquí. ☕</p>
+    </section>
+
+    <!-- SECCIÓN DE COMENTARIOS Y CALIFICACIONES -->
+    <section class="seccion-comentarios">
+        <h3 style="text-align: center;">Comentarios y Calificaciones</h3>
+        
+        <!-- Bloque de Promedio Dinámico -->
+        <div class="caja-promedio-general">
+            <div>
+                <h4 style="color: #e8c99b; margin-bottom: 5px; font-family: Georgia, serif;">Calificación Promedio</h4>
+                <p style="font-size: 14px; color: #d4b58e;" id="texto-total-opiniones">Calculando opiniones...</p>
+            </div>
+            <div style="text-align: center;">
+                <div class="promedio-numero" id="promedio-estrellas-num">5.0</div>
+                <div style="color: #e67e22; font-size: 18px;" id="estrellas-promedio-visual">⭐⭐⭐⭐⭐</div>
+            </div>
+        </div>
+
+        <!-- Formulario para enviar comentario -->
+        <form id="form-comentario" class="form-comentario-box">
+            <div>
+                <label for="calificacion" style="font-weight: bold; display: block; margin-bottom: 5px;">Calificación (1 a 5 estrellas):</label>
+                <select id="calificacion" required>
+                    <option value="5">⭐⭐⭐⭐⭐ (5 - Excelente)</option>
+                    <option value="4">⭐⭐⭐⭐ (4 - Muy bueno)</option>
+                    <option value="3">⭐⭐⭐ (3 - Bueno)</option>
+                    <option value="2">⭐⭐ (2 - Regular)</option>
+                    <option value="1">⭐ (1 - Malo)</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="texto-comentario" style="font-weight: bold; display: block; margin-bottom: 5px;">Tu comentario:</label>
+                <textarea id="texto-comentario" placeholder="Escribe tu opinión sobre el café o el servicio..." required rows="3"></textarea>
+            </div>
+            
+            <button type="submit" class="boton" style="width: 100%; text-align: center; background-color: #38251e;">Enviar Comentario</button>
+        </form>
+
+        <hr style="border: 0; border-top: 1px solid #d4b58e; margin: 30px 0;">
+
+        <!-- Listado de opiniones -->
+        <h4>Opiniones recientes de nuestros clientes</h4>
+        <div id="lista-opiniones" class="lista-opiniones">
+            <!-- Los comentarios se cargarán dinámicamente aquí -->
+        </div>
+    </section>
+
+    <!-- Modal de Iniciar Sesión -->
+    <div id="modalLogin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 35px; border-radius: 15px; width: 320px; text-align: center; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
+            <span onclick="cerrarModalLogin()" style="position: absolute; top: 12px; right: 18px; cursor: pointer; font-size: 22px; color: #593724; font-weight: bold;">&times;</span>
+            
+            <h3 style="color: #38251e; margin-bottom: 15px; font-family: Georgia, serif;">Acceso al Sistema</h3>
+            
+            <input type="text" id="loginUsuario" placeholder="Correo electrónico / Usuario" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 8px;">
+            <input type="password" id="loginPass" placeholder="Contraseña" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px;">
+            
+            <button onclick="procesarLogin()" class="boton" style="width: 100%; background-color: #38251e;">Ingresar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let clienteActivo = sessionStorage.getItem("clienteActivo");
+            let adminAuth = sessionStorage.getItem("adminAuth");
+            let turnoEncargado = sessionStorage.getItem("turnoEncargado");
+
+            if (clienteActivo || adminAuth || turnoEncargado) {
+                let btn = document.getElementById("btnSesionNav");
+                let userDisplay = clienteActivo || (adminAuth ? "Admin (Jefe)" : `Encargado (${turnoEncargado})`);
+                btn.innerHTML = `👤 ${userDisplay}`;
+            }
+
+            // Cargar los comentarios al abrir la página
+            cargarComentarios();
+        });
+
+        function abrirModalLogin() {
+            let clienteActivo = sessionStorage.getItem("clienteActivo");
+            let adminAuth = sessionStorage.getItem("adminAuth");
+            let turnoEncargado = sessionStorage.getItem("turnoEncargado");
+
+            if (clienteActivo || adminAuth || turnoEncargado) {
+                let menu = document.getElementById("menuDesplegable");
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+                return;
+            }
+            document.getElementById('modalLogin').style.display = 'flex';
+        }
+
+        function cerrarModalLogin() {
+            document.getElementById('modalLogin').style.display = 'none';
+        }
+
+        function manejarClickSesion(event) {
+            event.preventDefault();
+            abrirModalLogin();
+        }
+
+        function procesarLogin() {
+            let user = document.getElementById('loginUsuario').value.trim().toLowerCase();
+            let pass = document.getElementById('loginPass').value.trim();
+
+            if (user === "" || pass === "") {
+                alert("Por favor ingresa usuario y contraseña.");
+                return;
+            }
+
+            if (!user.includes("@gmail.com")) {
+                alert("Acceso denegado. El usuario debe ser un correo de Gmail (@gmail.com).");
+                return;
+            }
+
+            // 1. Acceso del Jefe Principal (Ve ambos turnos)
+            if (user === "amorycafe@gmail.com" && pass === "lara") {
+                sessionStorage.setItem("adminAuth", "true");
+                sessionStorage.removeItem("turnoEncargado");
+                sessionStorage.removeItem("clienteActivo");
+                alert("Bienvenido Administrador (Jefe)");
+                cerrarModalLogin();
+                setTimeout(() => {
+                    window.location.href = "admin.html";
+                }, 100);
+            } 
+            // 2. Acceso Encargado Turno Matutino
+            else if (user === "matutino@gmail.com" && pass === "matutino2026") {
+                sessionStorage.setItem("turnoEncargado", "Matutino");
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("clienteActivo");
+                alert("Bienvenido Encargado - Turno Matutino");
+                cerrarModalLogin();
+                setTimeout(() => {
+                    window.location.href = "admin.html";
+                }, 100);
+            } 
+            // 3. Acceso Encargado Turno Vespertino
+            else if (user === "vespertino@gmail.com" && pass === "vespertino2026") {
+                sessionStorage.setItem("turnoEncargado", "Vespertino");
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("clienteActivo");
+                alert("Bienvenido Encargado - Turno Vespertino");
+                cerrarModalLogin();
+                setTimeout(() => {
+                    window.location.href = "admin.html";
+                }, 100);
+            } 
+            // 4. Clientes normales
+            else {
+                sessionStorage.setItem("clienteActivo", user);
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("turnoEncargado");
+                alert("Sesión iniciada con éxito");
+                cerrarModalLogin();
+                
+                let btn = document.getElementById("btnSesionNav");
+                btn.innerHTML = `👤 ${user}`;
+                
+                window.location.href = "index.html";
+            }
+        }
+
+        function cerrarSesionCliente() {
+            sessionStorage.removeItem("clienteActivo");
+            sessionStorage.removeItem("adminAuth");
+            sessionStorage.removeItem("turnoEncargado");
+            alert("Has cerrado sesión.");
+            window.location.href = "index.html";
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('#btnSesionNav')) {
+                let menu = document.getElementById("menuDesplegable");
+                if (menu && menu.style.display === "block") {
+                    menu.style.display = "none";
+                }
+            }
+        }
+
+        // --- LÓGICA PARA CARGAR, CALCULAR PROMEDIO Y ENVIAR COMENTARIOS ---
+
+        async function cargarComentarios() {
+            try {
+                const respuesta = await fetch("http://localhost:5000/api/comentarios");
+                const comentarios = await respuesta.json();
+                
+                const contenedor = document.getElementById("lista-opiniones");
+                contenedor.innerHTML = "";
+                
+                // Cálculo del promedio dinámico de estrellas
+                let sumaCalificaciones = 0;
+                let totalComentarios = comentarios.length;
+
+                if (totalComentarios === 0) {
+                    document.getElementById("promedio-estrellas-num").innerText = "5.0";
+                    document.getElementById("estrellas-promedio-visual").innerText = "⭐⭐⭐⭐⭐";
+                    document.getElementById("texto-total-opiniones").innerText = "Basado en 0 opiniones";
+                    contenedor.innerHTML = "<p style='color: #777; text-align: center;'>Aún no hay comentarios. ¡Sé el primero en opinar!</p>";
+                    return;
+                }
+
+                comentarios.forEach(c => {
+                    sumaCalificaciones += Number(c.calificacion || 5);
+                });
+
+                let promedio = (sumaCalificaciones / totalComentarios).toFixed(1);
+                document.getElementById("promedio-estrellas-num").innerText = promedio;
+                document.getElementById("texto-total-opiniones").innerText = `Basado en ${totalComentarios} ${totalComentarios === 1 ? 'opinión' : 'opiniones'}`;
+                
+                // Mostrar estrellas redondeadas en el promedio superior
+                let estrellasRedondeadas = Math.round(promedio);
+                document.getElementById("estrellas-promedio-visual").innerText = "⭐".repeat(estrellasRedondeadas);
+
+                // Renderizar cada tarjeta de opinión
+                comentarios.forEach(c => {
+                    const estrellas = "⭐".repeat(c.calificacion || 5);
+                    
+                    let respuestaHTML = "";
+                    if (c.respuesta) {
+                        respuestaHTML = `
+                            <div style="margin-top: 12px; padding: 10px 14px; background: #f0f7ff; border-radius: 8px; border-left: 3px solid #3498db; font-size: 0.9em; color: #333;">
+                                <b style="color: #2980b9;">Respuesta de Aroma & Café:</b> ${c.respuesta}
+                            </div>
+                        `;
+                    }
+                    
+                    const div = document.createElement("div");
+                    div.className = "tarjeta-opinion";
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 6px;">
+                            <strong style="color: #38251e;">${c.correo}</strong>
+                            <span style="color: #888; font-size: 0.85em;">${c.fecha}</span>
+                        </div>
+                        <div style="color: #e67e22; margin-bottom: 6px; font-size: 1.1em;">${estrellas}</div>
+                        <p style="margin: 0; color: #555; word-break: break-word; line-height: 1.5;">${c.comentario}</p>
+                        ${respuestaHTML}
+                    `;
+                    contenedor.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error al cargar los comentarios:", error);
+            }
+        }
+
+        document.getElementById("form-comentario").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const calificacion = document.getElementById("calificacion").value;
+            const comentario = document.getElementById("texto-comentario").value;
+
+            try {
+                const respuesta = await fetch("http://localhost:5000/api/comentarios", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ calificacion, comentario })
+                });
+
+                const resultado = await respuesta.json();
+                
+                if (respuesta.ok) {
+                    alert(resultado.mensaje);
+                    document.getElementById("form-comentario").reset();
+                    cargarComentarios(); // Recarga la lista y el promedio general
+                } else {
+                    alert("Error: " + resultado.error);
+                }
+            } catch (error) {
+                console.error("Error al enviar el comentario:", error);
+                alert("No se pudo conectar con el servidor.");
+            }
+        });
+    </script>
+</body>
+</html>

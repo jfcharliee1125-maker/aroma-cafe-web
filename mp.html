@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aroma & Café | Método de Pago</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #faf3e7;
+    color: #3e2723;
+    padding: 40px;
+}
+
+.contenedor {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.badge-tipo {
+    text-align: center;
+    background: #f0e1cc;
+    color: #6f4530;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.producto {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.total {
+    text-align: right;
+    font-size: 16px;
+    color: #38251e;
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+.total span {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    color: #3e2723;
+}
+
+select, input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.boton {
+    margin-top: 20px;
+    background: #6f4530;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.boton:hover {
+    background: #a76b3f;
+}
+
+.oculto {
+    display: none;
+}
+
+.ventana {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f0e1cc;
+    border-radius: 10px;
+}
+
+.campo-fecha {
+    margin: 15px 0;
+    text-align: left;
+}
+
+.campo-fecha label {
+    display: block;
+    margin-bottom: 8px;
+    color: #593724;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.caja-banco-cafeteria {
+    background: #fdf6ec;
+    border: 1px solid #d6b07f;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #4b3024;
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>Resumen del Pedido</h1>
+    
+    <div style="text-align: center;">
+        <span class="badge-tipo" id="infoEntrega">🏃‍♂️ Recoger en tienda (Pickup)</span>
+    </div>
+
+    <div id="pedido"></div>
+
+    <div class="total" id="total"></div>
+
+    <h2 style="margin-top:30px;">Selecciona Método de Pago</h2>
+
+    <select id="metodoPago" onchange="mostrarFormulario()">
+        <option value="">Seleccione</option>
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Transferencia">Transferencia Bancaria</option>
+    </select>
+
+    <div id="efectivo" class="ventana oculto">
+        <h3>Pago en efectivo</h3>
+        <label>Cantidad con la que pagarás:</label>
+        <input type="number" id="montoEfectivo" placeholder="Ingresa el monto">
+        <button type="button" class="boton" onclick="validarEfectivo()">Verificar Pago</button>
+        <p id="resultadoEfectivo" style="margin-top:10px;font-weight:bold;"></p>
+    </div>
+
+    <div id="tarjeta" class="ventana oculto">
+        <h4>Datos de Tarjeta</h4>
+        <input type="text" id="nombreTitular" placeholder="Nombre del titular">
+        <input type="text" id="numeroTarjeta" placeholder="Número de tarjeta" maxlength="16">
+        
+        <div class="campo-fecha">
+            <label for="vencimientoTarjeta">Fecha de vencimiento (MM/AA)</label>
+            <input type="text" id="vencimientoTarjeta" placeholder="MM/AA" maxlength="5">
+        </div>
+
+        <input type="password" id="cvvTarjeta" placeholder="CVV" maxlength="4">
+    </div>
+
+    <div id="transferencia" class="ventana oculto">
+        <div class="caja-banco-cafeteria">
+            <p style="font-weight: bold; margin-bottom: 4px;">🏦 Datos para realizar tu depósito o transferencia:</p>
+            <p><b>Banco:</b> BBVA México</p>
+            <p><b>Clave Interbancaria:</b> 012345678901234567</p>
+            <p><b>Beneficiario:</b> Aroma y Café S.A. de C.V.</p>
+        </div>
+
+        <input type="text" id="bancoTransferencia" placeholder="¿Desde qué banco realizaste la transferencia?">
+        <input type="text" id="referenciaTransferencia" placeholder="Número de referencia o folio">
+        
+        <div style="margin-top: 10px;">
+            <label style="font-size: 13px; color: #593724; font-weight: bold;">📎 Adjuntar imagen del comprobante de pago:</label>
+            <input type="file" id="imagenComprobante" accept="image/*" style="padding: 8px; background: white;">
+        </div>
+    </div>
+
+    <button class="boton" onclick="finalizarCompra()">
+        Finalizar Compra
+    </button>
+
+</div>
+
+<script>
+let espresso = parseInt(localStorage.getItem("espresso")) || 0;
+let capuchino = parseInt(localStorage.getItem("capuchino")) || 0;
+let chocomilk = parseInt(localStorage.getItem("chocomilk")) || 0;
+let pastel = parseInt(localStorage.getItem("pastel")) || 0;
+let baguette = parseInt(localStorage.getItem("baguette")) || 0;
+let folioActual = localStorage.getItem("folio") || "";
+
+let pedido = document.getElementById("pedido");
+let subtotalCalculado = 0;
+
+function agregar(nombre, cantidad, precio) {
+    if (cantidad > 0) {
+        let importe = cantidad * precio;
+        pedido.innerHTML += `
+        <div class="producto">
+            <span>${nombre} x ${cantidad}</span>
+            <span>$${importe}</span>
+        </div>
+        `;
+        subtotalCalculado += importe;
+    }
+}
+
+agregar("Café Espresso", espresso, 50);
+agregar("Capuchino", capuchino, 45);
+agregar("Chocomilk", chocomilk, 35);
+agregar("Pastel de Chocolate", pastel, 90);
+agregar("Baguette", baguette, 75);
+
+localStorage.setItem("subtotalBase", subtotalCalculado);
+
+let iva = subtotalCalculado * 0.16;
+let totalConIva = subtotalCalculado + iva;
+
+document.getElementById("total").innerHTML = `
+    Subtotal: $${subtotalCalculado.toFixed(2)} MXN<br>
+    IVA (16%): $${iva.toFixed(2)} MXN<br>
+    <span>Total del pedido (con IVA): $${totalConIva.toFixed(2)} MXN</span>
+`;
+
+function mostrarFormulario() {
+    document.getElementById("efectivo").style.display = "none";
+    document.getElementById("tarjeta").style.display = "none";
+    document.getElementById("transferencia").style.display = "none";
+
+    let metodo = document.getElementById("metodoPago").value;
+
+    if (metodo === "Efectivo") {
+        document.getElementById("efectivo").style.display = "block";
+    } else if (metodo === "Tarjeta") {
+        document.getElementById("tarjeta").style.display = "block";
+    } else if (metodo === "Transferencia") {
+        document.getElementById("transferencia").style.display = "block";
+    }
+}
+
+function validarEfectivo() {
+    let monto = parseFloat(document.getElementById("montoEfectivo").value) || 0;
+    let resultado = document.getElementById("resultadoEfectivo");
+
+    if (monto < totalConIva) {
+        let faltante = totalConIva - monto;
+        resultado.style.color = "red";
+        resultado.innerHTML = "No te alcanza. Te faltan $" + faltante.toFixed(2) + " MXN. Debes retirar algún producto o llevar más dinero.";
+    } else {
+        let cambio = monto - totalConIva;
+        resultado.style.color = "green";
+        resultado.innerHTML = "Pago suficiente. Tu cambio será de $" + cambio.toFixed(2) + " MXN.";
+    }
+}
+
+function finalizarCompra() {
+    let metodoSelect = document.getElementById("metodoPago").value;
+
+    if (metodoSelect === "") {
+        alert("Selecciona un método de pago.");
+        return;
+    }
+
+    if (metodoSelect === "Efectivo") {
+        let monto = parseFloat(document.getElementById("montoEfectivo").value) || 0;
+        if (monto < totalConIva) {
+            alert("El dinero ingresado no cubre el total de la compra.");
+            return;
+        }
+    }
+
+    if (metodoSelect === "Tarjeta") {
+        let titular = document.getElementById("nombreTitular").value.trim();
+        let tarjeta = document.getElementById("numeroTarjeta").value.trim();
+        if (titular === "" || tarjeta.length < 15) {
+            alert("Por favor completa los datos de la tarjeta correctamente.");
+            return;
+        }
+        localStorage.setItem("nombreTitular", titular);
+        localStorage.setItem("numeroTarjeta", tarjeta);
+    }
+
+    if (metodoSelect === "Transferencia") {
+        let banco = document.getElementById("bancoTransferencia").value.trim();
+        let referencia = document.getElementById("referenciaTransferencia").value.trim();
+        if (banco === "" || referencia === "") {
+            alert("Por favor completa los datos de la transferencia.");
+            return;
+        }
+        localStorage.setItem("banco", banco);
+        localStorage.setItem("referencia", referencia);
+    }
+
+    if (folioActual) {
+        fetch(`http://127.0.0.1:5000/api/pedidos/${folioActual}/pago`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ metodoPago: metodoSelect })
+        }).catch(err => console.log("Actualización de pago local activa"));
+    }
+
+    completarGuardado(metodoSelect);
+}
+
+function completarGuardado(metodo) {
+    localStorage.setItem("espresso", espresso);
+    localStorage.setItem("capuchino", capuchino);
+    localStorage.setItem("chocomilk", chocomilk);
+    localStorage.setItem("pastel", pastel);
+    localStorage.setItem("baguette", baguette);
+
+    localStorage.setItem("totalCompra", totalConIva.toFixed(2));
+    localStorage.setItem("metodoPago", metodo);
+    localStorage.setItem("tipoEntrega", "pickup");
+    localStorage.setItem("fechaCompra", new Date().toLocaleString());
+
+    window.location.href = "ticket.html";
+}
+</script>
+
+</body>
+</html>

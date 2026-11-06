@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Galería</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; 
+            gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+
+        .galeria-seccion { max-width: 900px; margin: auto; padding: 75px 25px; min-height: 80vh; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-family: Georgia, serif; font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .galeria-contenedor { background: white; padding: 40px; border-radius: 18px; box-shadow: 0 6px 25px #59391b0d; }
+        .galeria-contenedor ul { list-style: disc; padding-left: 20px; }
+        .galeria-contenedor li { font-size: 19px; color: #593724; margin-top: 25px; font-weight: 600; }
+        
+        .galeria-contenedor img { 
+            max-width: 100%; 
+            height: auto; 
+            object-fit: none; /* Mantiene las dimensiones nativas de la imagen */
+            border-radius: 12px; 
+            margin-top: 12px; 
+            margin-bottom: 12px; 
+            border: 1px solid #e7d4ba; 
+            display: block;
+        }
+
+        .galeria-contenedor p { color: #705748; font-size: 16px; line-height: 1.6; margin-bottom: 25px; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html" class="activo">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="galeria-seccion">
+        <div class="encabezado">
+            <span class="etiqueta">Nuestros productos en detalle</span>
+            <h2>Galería Fotográfica</h2>
+            <p>Descubre a través de nuestra galería el sabor y la calidad de cada una de nuestras especialidades.</p>
+        </div>
+
+        <div class="galeria-contenedor">
+            <ul>
+                <li>Café Espresso: <span style="font-weight: normal; color: #705748;">Café intenso y aromático preparado con granos seleccionados.</span></li>
+                <img src="exp.webp" alt="Café Espresso">
+                <p>Una taza de espresso recién preparado, con un sabor fuerte y un aroma que despierta los sentidos.</p>
+
+                <li>Capuchino clásico: <span style="font-weight: normal; color: #705748;">Deliciosa combinación de espresso, leche vaporizada y espuma cremosa.</span></li>
+                <img src="capu.webp" alt="Capuchino clásico">
+                <p>Nuestro capuchino destaca por su cremosa espuma y el equilibrio perfecto entre café y leche.</p>
+
+                <li>Chocomilk: <span style="font-weight: normal; color: #705748;">Bebida dulce y refrescante elaborada con leche y chocolate.</span>
+                </li>
+                <img src="choco.webp" alt="Chocomilk">
+                <p>Ideal para quienes prefieren una bebida suave y dulce, perfecta para cualquier momento del día.</p>
+
+                <li>Pastel de chocolate (por porciones): <span style="font-weight: normal; color: #705748;"
+                    Suave y esponjoso pastel elaborado con chocolate de alta calidad.</span></li>
+                <img src="pa.webp" alt="Pastel de chocolate">
+                <p>Una deliciosa porción de pastel con un intenso sabor a chocolate que complementa cualquier café.</p>
+
+                <li>Baguette: <span style="font-weight: normal; color: #705748;">Pan crujiente relleno de ingredientes frescos.</span></li>
+                <img src="ba.webp" alt="Baguette">
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

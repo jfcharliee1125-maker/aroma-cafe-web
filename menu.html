@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Menú</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+
+        .productos { background-color: #f0e1cc; padding: 70px 8%; min-height: 80vh; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-family: Georgia, serif; font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .tarjetas { max-width: 1150px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .tarjeta { background: #fffaf2; border-radius: 18px; padding: 25px; text-align: center; border: 1px solid #e7d4ba; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .tarjeta:hover { transform: translateY(-8px); box-shadow: 0 12px 25px #67452b20; }
+        .tarjeta img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin: 15px 0; }
+        .tarjeta h3 { color: #593724; font-size: 21px; margin-bottom: 8px; }
+        .tarjeta p { color: #806653; font-size: 15px; line-height: 1.7; }
+        .precio { font-size: 20px; font-weight: bold; color: #a76b3f; margin-top: 10px; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html" class="activo">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="productos">
+        <div class="encabezado">
+            <span class="etiqueta">Preparados para ti</span>
+            <h2>Nuestro Menú</h2>
+            <p>Conoce cada una de nuestras especialidades y sus precios.</p>
+        </div>
+
+        <div class="tarjetas">
+            <div class="tarjeta">
+                <div>
+                    <h3>Café Espresso</h3>
+                    <img src="exp.webp" alt="Café Espresso">
+                    <p><b>Descripción:</b> Café intenso y aromático preparado con granos seleccionados.</p>
+                    <div class="precio">$50 MXN</div>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <div>
+                    <h3>Capuchino clásico</h3>
+                    <img src="capu.webp" alt="Capuchino clásico">
+                    <p><b>Descripción:</b> Deliciosa combinación de espresso, leche vaporizada y espuma cremosa.</p>
+                    <div class="precio">$45 MXN</div>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <div>
+                    <h3>Chocomilk</h3>
+                    <img src="choco.webp" alt="Chocomilk">
+                    <p><b>Descripción:</b> Bebida dulce y refrescante elaborada con leche y chocolate.</p>
+                    <div class="precio">$35 MXN</div>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <div>
+                    <h3>Pastel de chocolate</h3>
+                    <img src="pa.webp" alt="Pastel de chocolate">
+                    <p><b>Descripción:</b> Suave y esponjoso pastel elaborado con chocolate de alta calidad.</p>
+                    <div class="precio">$90 MXN</div>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <div>
+                    <h3>Baguette</h3>
+                    <img src="ba.webp" alt="Baguette">
+                    <p><b>Descripción:</b> Pan crujiente relleno de ingredientes frescos.</p>
+                    <div class="precio">$75 MXN</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

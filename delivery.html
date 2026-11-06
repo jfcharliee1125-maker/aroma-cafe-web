@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aroma & Café | Datos de Envío</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #faf3e7;
+        color: #3e2723;
+        padding: 40px 20px;
+    }
+
+    .contenedor {
+        max-width: 650px;
+        margin: auto;
+        background: white;
+        padding: 35px;
+        border-radius: 18px;
+        box-shadow: 0 6px 25px rgba(89, 57, 27, 0.08);
+    }
+
+    .encabezado {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .encabezado h2 {
+        font-family: Georgia, serif;
+        font-size: 30px;
+        color: #4b3024;
+    }
+
+    .encabezado p {
+        color: #806653;
+        font-size: 15px;
+        margin-top: 5px;
+    }
+
+    .grupo-campo {
+        margin-bottom: 18px;
+    }
+
+    .grupo-campo label {
+        display: block;
+        font-weight: 600;
+        color: #593724;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .grupo-campo input, .grupo-campo textarea, .grupo-campo select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e7d4ba;
+        border-radius: 10px;
+        font-size: 15px;
+        outline: none;
+        background-color: #fffdf9;
+        color: #3e2723;
+    }
+
+    .grupo-campo input:focus, .grupo-campo textarea:focus, .grupo-campo select:focus {
+        border-color: #c08a54;
+        box-shadow: 0 0 8px rgba(192, 138, 84, 0.3);
+    }
+
+    .fila-doble {
+        display: flex;
+        gap: 15px;
+    }
+
+    .fila-doble .grupo-campo {
+        flex: 1;
+    }
+
+    .sub-seccion-pago {
+        background: #f0e1cc;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+
+    .sub-seccion-pago h3 {
+        color: #593724;
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .opcion-pago-detalle {
+        display: none;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed #d6b07f;
+    }
+
+    .caja-banco-cafeteria {
+        background: #fdf6ec;
+        border: 1px solid #d6b07f;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #4b3024;
+    }
+
+    .resumen-monto {
+        background: #e8c99b;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: right;
+        margin-top: 20px;
+        font-size: 16px;
+        color: #38251e;
+        line-height: 1.5;
+    }
+
+    .resumen-monto span {
+        font-weight: bold;
+        font-size: 20px;
+        display: block;
+    }
+
+    .mensaje-error {
+        color: red;
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .boton {
+        display: block;
+        width: 100%;
+        background-color: #6f4530;
+        color: white;
+        padding: 15px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 20px;
+    }
+
+    .boton:hover {
+        background-color: #a76b3f;
+    }
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+    <div class="encabezado">
+        <h2>🛵 Datos de Envío a Domicilio</h2>
+        <p>Ingresa la información y elige cómo deseas pagar al recibir.</p>
+    </div>
+
+    <form id="formDelivery" onsubmit="guardarYContinuar(event)">
+        <div class="grupo-campo">
+            <label for="nombreRecibe">👤 Nombre de quien recibe *</label>
+            <input type="text" id="nombreRecibe" placeholder="Ej. Juan Pérez" required>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="telefono">📞 Teléfono de contacto *</label>
+            <input type="tel" id="telefono" placeholder="Ej. 921 123 4567" required>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="calleNumero">📍 Calle y número exterior/interior *</label>
+            <input type="text" id="calleNumero" placeholder="Ej. Av. Hidalgo #123 Int. 2" required>
+        </div>
+
+        <div class="fila-doble">
+            <div class="grupo-campo">
+                <label for="colonia">🏡 Colonia / Fraccionamiento *</label>
+                <input type="text" id="colonia" placeholder="Ej. Centro" required>
+            </div>
+            <div class="grupo-campo">
+                <label for="codigoPostal">📮 Código Postal *</label>
+                <input type="text" id="codigoPostal" placeholder="Ej. 96400" maxlength="5" required>
+            </div>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="referencias">📝 Referencias adicionales (opcional)</label>
+            <textarea id="referencias" rows="2" placeholder="Ej. Casa color portón blanco..."></textarea>
+        </div>
+
+        <div class="sub-seccion-pago">
+            <h3>Método de pago al recibir</h3>
+            <div class="grupo-campo" style="margin-bottom: 0;">
+                <select id="metodoPagoDelivery" onchange="mostrarOpcionPago()" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="Efectivo">💵 Efectivo (con cambio)</option>
+                    <option value="Tarjeta">💳 Tarjeta (con terminal móvil)</option>
+                    <option value="Transferencia">🏦 Transferencia Bancaria</option>
+                </select>
+            </div>
+
+            <div id="detalleEfectivo" class="opcion-pago-detalle">
+                <label for="cambioEfectivo" style="font-size: 13px; color: #593724;">Cantidad con la que pagarás:</label>
+                <input type="number" id="cambioEfectivo" placeholder="Ej. 200, 500">
+                <div id="errorEfectivo" class="mensaje-error"></div>
+            </div>
+
+            <div id="detalleTarjeta" class="opcion-pago-detalle">
+                <p style="font-size: 13px; color: #593724; font-weight: 500;">
+                    ✅ El repartidor llevará una terminal electrónica (TPV) portátil hasta tu puerta para realizar el cobro con tarjeta de crédito o débito.
+                </p>
+            </div>
+
+            <div id="detalleTransferencia" class="opcion-pago-detalle">
+                <div class="caja-banco-cafeteria">
+                    <p style="font-weight: bold; margin-bottom: 4px;">🏦 Datos para realizar tu depósito o transferencia:</p>
+                    <p><b>Banco:</b> BBVA México</p>
+                    <p><b>Clave Interbancaria:</b> 012345678901234567</p>
+                    <p><b>Beneficiario:</b> Aroma y Café S.A. de C.V.</p>
+                </div>
+
+                <div class="grupo-campo" style="margin-bottom: 10px;">
+                    <label for="bancoCliente" style="font-size: 13px; color: #593724;">¿Desde qué banco realizaste la transferencia?</label>
+                    <input type="text" id="bancoCliente" placeholder="Ej. BBVA, Banorte, Santander, etc.">
+                </div>
+
+                <div class="grupo-campo" style="margin-bottom: 10px;">
+                    <label for="referenciaCliente" style="font-size: 13px; color: #593724;">Número de referencia o folio de transferencia:</label>
+                    <input type="text" id="referenciaCliente" placeholder="Ej. 12345678 o clave de rastreo">
+                </div>
+
+                <div class="grupo-campo" style="margin-bottom: 0;">
+                    <label for="imagenComprobante" style="font-size: 13px; color: #593724;">📎 Adjuntar imagen del comprobante de pago:</label>
+                    <input type="file" id="imagenComprobante" accept="image/*" style="padding: 8px; background: white;">
+                </div>
+            </div>
+        </div>
+
+        <div class="resumen-monto" id="montoTotalText">
+            Calculando totales...
+        </div>
+
+        <button type="submit" class="boton">Confirmar 📄</button>
+    </form>
+</div>
+
+<script>
+    let subtotalOriginal = parseFloat(localStorage.getItem("subtotalBase"));
+    let folioActual = localStorage.getItem("folio") || "";
+    
+    if (isNaN(subtotalOriginal)) {
+        let valorPrevio = parseFloat(localStorage.getItem("totalCompra")) || 0;
+        subtotalOriginal = valorPrevio > 0 ? valorPrevio / 1.16 : 0;
+        localStorage.setItem("subtotalBase", subtotalOriginal.toFixed(2));
+    }
+
+    let iva = subtotalOriginal * 0.16;
+    let totalConIva = subtotalOriginal + iva;
+
+    localStorage.setItem("totalCompra", totalConIva.toFixed(2));
+
+    document.getElementById("montoTotalText").innerHTML = `
+        Subtotal: $${subtotalOriginal.toFixed(2)} MXN<br>
+        IVA (16%): $${iva.toFixed(2)} MXN<br>
+        <span>Total del pedido (con IVA): $${totalConIva.toFixed(2)} MXN</span>
+    `;
+
+    function mostrarOpcionPago() {
+        let metodo = document.getElementById("metodoPagoDelivery").value;
+       
+        document.getElementById("detalleEfectivo").style.display = "none";
+        document.getElementById("detalleTarjeta").style.display = "none";
+        document.getElementById("detalleTransferencia").style.display = "none";
+        document.getElementById("errorEfectivo").style.display = "none";
+
+        if (metodo === "Efectivo") {
+            document.getElementById("detalleEfectivo").style.display = "block";
+        } else if (metodo === "Tarjeta") {
+            document.getElementById("detalleTarjeta").style.display = "block";
+        } else if (metodo === "Transferencia") {
+            document.getElementById("detalleTransferencia").style.display = "block";
+        }
+    }
+
+    function guardarYContinuar(event) {
+        event.preventDefault();
+
+        let metodoPago = document.getElementById("metodoPagoDelivery").value;
+        let divError = document.getElementById("errorEfectivo");
+        divError.style.display = "none";
+
+        if (!metodoPago) {
+            alert("Por favor selecciona un método de pago.");
+            return;
+        }
+
+        let detallesPagoFinal = "";
+
+        if (metodoPago === "Efectivo") {
+            let montoIngresadoInput = document.getElementById("cambioEfectivo").value.trim();
+            let montoIngresado = parseFloat(montoIngresadoInput);
+
+            if (isNaN(montoIngresado) || montoIngresado <= 0) {
+                divError.innerText = "Por favor ingresa una cantidad válida.";
+                divError.style.display = "block";
+                return;
+            }
+
+            if (montoIngresado < totalConIva) {
+                let faltante = totalConIva - montoIngresado;
+                divError.innerText = `No te alcanza. Te faltan $${faltante.toFixed(2)} MXN. Debes retirar algún producto o llevar más dinero.`;
+                divError.style.display = "block";
+                return;
+            }
+
+            detallesPagoFinal = montoIngresado.toString();
+        } else if (metodoPago === "Tarjeta") {
+            detallesPagoFinal = "Pago con Tarjeta (Terminal móvil)";
+        } else if (metodoPago === "Transferencia") {
+            let bancoInput = document.getElementById("bancoCliente").value.trim() || "No especificado";
+            let refInput = document.getElementById("referenciaCliente").value.trim() || "N/A";
+            detallesPagoFinal = "Banco cliente: " + bancoInput + " | Ref: " + refInput;
+        }
+
+        if (folioActual) {
+            fetch(`http://127.0.0.1:5000/api/pedidos/${folioActual}/pago`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ metodoPago: metodoPago })
+            }).catch(err => console.log("Actualización de pago local activa"));
+        }
+
+        let inputArchivo = document.getElementById("imagenComprobante");
+        
+        if (metodoPago === "Transferencia" && inputArchivo.files && inputArchivo.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem("comprobanteImagen", e.target.result);
+                finalizarGuardado(detallesPagoFinal, metodoPago);
+            };
+            reader.readAsDataURL(inputArchivo.files[0]);
+        } else {
+            localStorage.removeItem("comprobanteImagen");
+            finalizarGuardado(detallesPagoFinal, metodoPago);
+        }
+    }
+
+    function finalizarGuardado(detallesPagoFinal, metodoPago) {
+        let datosDelivery = {
+            recibe: document.getElementById("nombreRecibe").value.trim(),
+            telefono: document.getElementById("telefono").value.trim(),
+            direccion: document.getElementById("calleNumero").value.trim(),
+            colonia: document.getElementById("colonia").value.trim(),
+            cp: document.getElementById("codigoPostal").value.trim(),
+            referencias: document.getElementById("referencias").value.trim(),
+            metodoPago: metodoPago,
+            detallesPago: detallesPagoFinal
+        };
+
+        localStorage.setItem("datosDelivery", JSON.stringify(datosDelivery));
+        localStorage.setItem("tipoEntrega", "delivery");
+        localStorage.setItem("metodoPago", metodoPago);
+        localStorage.setItem("fechaCompra", new Date().toLocaleString());
+
+        window.location.href = "comprobante.html";
+    }
+</script>
+
+</body>
+</html>

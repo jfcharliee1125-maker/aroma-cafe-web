@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket de Compra - Pickup</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #faf3e7;
+    color: #3e2723;
+    padding: 40px;
+}
+
+.ticket {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.info {
+    margin-bottom: 20px;
+}
+
+.encabezado,
+.producto {
+    display: flex;
+    padding: 10px 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.encabezado {
+    background: #f0e1cc;
+    font-weight: bold;
+}
+
+.col-producto {
+    width: 40%;
+}
+
+.col-precio {
+    width: 20%;
+    text-align: center;
+}
+
+.col-cantidad {
+    width: 20%;
+    text-align: center;
+}
+
+.col-importe {
+    width: 20%;
+    text-align: right;
+}
+
+.total-desglose {
+    text-align: right;
+    margin-top: 15px;
+    font-size: 16px;
+    color: #38251e;
+    line-height: 1.5;
+}
+
+.total-desglose span {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    color: #3e2723;
+}
+
+.qr {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.qr img {
+    width: 220px;
+    height: 220px;
+}
+
+.boton {
+    margin-top: 20px;
+    background: #6f4530;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.boton:hover {
+    background: #a76b3f;
+}
+
+.gracias {
+    text-align: center;
+    color: green;
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cabecera-ticket {
+    background: linear-gradient(135deg, #e8c99b, #f4e2c7);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    border: 2px solid #d6b07f;
+    box-shadow: 0 8px 20px rgba(111,69,48,.15);
+}
+
+.cabecera-ticket h1 {
+    color: #6f4530;
+    margin: 0;
+    font-size: 42px;
+    letter-spacing: 1px;
+}
+
+.cabecera-ticket h2 {
+    color: #8b5e3c;
+    margin-top: 10px;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+.caja-tiempo {
+    background: #f4e2c7;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #d6b07f;
+    text-align: center;
+    font-size: 16px;
+    color: #593724;
+    font-weight: bold;
+}
+
+.btn-ver-imagen {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #6f4530;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-ver-imagen:hover {
+    background-color: #a76b3f;
+}
+
+.caja-notas {
+    background: #fdf6ec;
+    border: 1px solid #d6b07f;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 14px;
+    color: #4b3024;
+}
+</style>
+</head>
+
+<body>
+
+<div class="ticket">
+    <div class="cabecera-ticket">
+        <h1>☕ Aroma y Café</h1>
+        <h2>Ticket Pickup (Recoger en Tienda)</h2>
+        <p id="turnoTicket" style="margin-top: 8px; font-weight: bold; color: #593724; font-size: 18px;"></p>
+    </div>
+
+    <div class="caja-tiempo" id="cajaTiempoPickup"></div>
+
+    <div class="info">
+        <p id="folio"></p>
+        <p id="fecha"></p>
+    </div>
+
+    <hr>
+
+    <div class="encabezado">
+        <div class="col-producto">Producto</div>
+        <div class="col-precio">Precio Unitario</div>
+        <div class="col-cantidad">Cantidad</div>
+        <div class="col-importe">Importe</div>
+    </div>
+
+    <div id="productos"></div>
+
+    <p id="articulos" style="margin-top: 15px;"></p>
+
+    <!-- Apartado opcional de notas especiales -->
+    <div id="seccionNotas"></div>
+
+    <div class="total-desglose" id="contenedorTotales"></div>
+
+    <hr>
+
+    <p id="metodo"></p>
+    <div id="datosPago"></div>
+
+    <div class="qr">
+        <h3>Código QR</h3>
+        <img id="qrTicket" alt="Código QR del ticket">
+    </div>
+
+    <div class="gracias">
+        ¡Gracias por tu compra!
+    </div>
+
+    <div style="text-align: center;">
+        <button class="boton" id="btnDescargar">
+            Descargar Ticket
+        </button>
+    </div>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<script>
+let folio = localStorage.getItem("folio");
+if (!folio) {
+    folio = "CAF-" + Math.floor(100000 + Math.random() * 900000);
+    localStorage.setItem("folio", folio);
+}
+
+document.getElementById("folio").innerHTML = "<b>Folio:</b> " + folio;
+document.getElementById("fecha").innerHTML = "<b>Fecha:</b> " + (localStorage.getItem("fechaCompra") || new Date().toLocaleString());
+
+// Mostrar el turno guardado automáticamente
+let turnoActual = localStorage.getItem("turnoPedido") || "Matutino";
+document.getElementById("turnoTicket").innerHTML = `☀️ Turno: ${turnoActual}`;
+
+let ahora = new Date();
+let horaPickup = new Date(ahora.getTime() + 15 * 60000);
+let formatoHoraPickup = horaPickup.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+document.getElementById("cajaTiempoPickup").innerHTML = `⏱️ Tu pedido estará listo para recoger en tienda en aprox. <b>15 - 20 minutos</b> (Aprox. a las ${formatoHoraPickup})`;
+
+let productos = document.getElementById("productos");
+
+function agregar(nombre, cantidad, precio) {
+    if (cantidad > 0) {
+        let importe = cantidad * precio;
+        productos.innerHTML += `
+        <div class="producto">
+            <div class="col-producto">${nombre}</div>
+            <div class="col-precio">$${precio}</div>
+            <div class="col-cantidad">${cantidad}</div>
+            <div class="col-importe">$${importe}</div>
+        </div>
+        `;
+    }
+}
+
+let esp = parseInt(localStorage.getItem("espresso")) || 0;
+let cap = parseInt(localStorage.getItem("capuchino")) || 0;
+let cho = parseInt(localStorage.getItem("chocomilk")) || 0;
+let pas = parseInt(localStorage.getItem("pastel")) || 0;
+let bag = parseInt(localStorage.getItem("baguette")) || 0;
+
+agregar("Café Espresso", esp, 50);
+agregar("Capuchino", cap, 45);
+agregar("Chocomilk", cho, 35);
+agregar("Pastel de Chocolate", pas, 90);
+agregar("Baguette", bag, 75);
+
+let totalArticulos = esp + cap + cho + pas + bag;
+document.getElementById("articulos").innerHTML = "<b>Total de artículos:</b> " + totalArticulos;
+
+// Mostrar notas si el cliente escribió alguna
+let notasCliente = localStorage.getItem("notasPedido") || "";
+if (notasCliente.trim() !== "" && notasCliente !== "Sin observaciones") {
+    document.getElementById("seccionNotas").innerHTML = `
+        <div class="caja-horarios caja-notas">
+            <p><b>📝 Notas / Especificaciones:</b> ${notasCliente}</p>
+        </div>
+    `;
+}
+
+let subtotalOriginal = parseFloat(localStorage.getItem("subtotalBase"));
+if (isNaN(subtotalOriginal)) {
+    let valorPrevio = parseFloat(localStorage.getItem("totalCompra")) || 0;
+    subtotalOriginal = valorPrevio > 0 ? valorPrevio / 1.16 : 0;
+}
+
+let iva = subtotalOriginal * 0.16;
+let totalConIva = subtotalOriginal + iva;
+
+localStorage.setItem("totalCompra", totalConIva.toFixed(2));
+
+document.getElementById("contenedorTotales").innerHTML = `
+    Subtotal: $${subtotalOriginal.toFixed(2)} MXN<br>
+    IVA (16%): $${iva.toFixed(2)} MXN<br>
+    <span>TOTAL: $${totalConIva.toFixed(2)} MXN</span>
+`;
+
+let metodo = localStorage.getItem("metodoPago") || "Efectivo";
+let nombreMetodo = metodo;
+
+if (metodo.toLowerCase() === "efectivo") nombreMetodo = "💵 Efectivo";
+if (metodo.toLowerCase() === "tarjeta") nombreMetodo = "💳 Tarjeta";
+if (metodo.toLowerCase() === "transferencia") nombreMetodo = "🏦 Transferencia Bancaria";
+
+document.getElementById("metodo").innerHTML = "<b>Método de pago:</b> " + nombreMetodo;
+
+let datosPago = document.getElementById("datosPago");
+if (metodo.toLowerCase() === "tarjeta") {
+    let nombre = localStorage.getItem("nombreTitular") || "";
+    let tarjeta = localStorage.getItem("numeroTarjeta") || "";
+    let ultimos4 = tarjeta.length >= 4 ? tarjeta.slice(-4) : "0000";
+    datosPago.innerHTML = `
+        <h3>Datos de la Tarjeta</h3>
+        <p><b>Titular:</b> ${nombre}</p>
+        <p><b>Tarjeta:</b> **** **** **** ${ultimos4}</p>
+    `;
+} else if (metodo.toLowerCase() === "transferencia") {
+    let banco = localStorage.getItem("banco") || "No especificado";
+    let referencia = localStorage.getItem("referencia") || "N/A";
+    
+    let imagenComprobanteB64 = localStorage.getItem("comprobanteImagen");
+    let botonImagenHTML = "";
+    
+    if (imagenComprobanteB64) {
+        botonImagenHTML = `<br><button class="btn-ver-imagen" onclick="abrirImagenComprobante()">🔍 Ver imagen de comprobante</button>`;
+    } else {
+        botonImagenHTML = `<p style="margin-top:5px; font-size:13px; color:#a0522d;"><i>No se adjuntó ninguna imagen del comprobante.</i></p>`;
+    }
+
+    datosPago.innerHTML = `
+        <h3>Datos de Transferencia</h3>
+        <p><b>Banco cliente:</b> ${banco}</p>
+        <p><b>Referencia:</b> ${referencia}</p>
+        ${botonImagenHTML}
+    `;
+} else {
+    datosPago.innerHTML = `
+        <h3>Pago en efectivo</h3>
+        <p>Pago recibido correctamente en sucursal.</p>
+    `;
+}
+
+let contenidoQR = "AROMA Y CAFE\n" +
+"Folio: " + folio + "\n" +
+"Turno: " + turnoActual + "\n" +
+"Fecha: " + (localStorage.getItem("fechaCompra") || "") + "\n" +
+"Total: $" + totalConIva.toFixed(2) + "\n" +
+"Metodo: " + metodo;
+
+document.getElementById("qrTicket").src = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(contenidoQR);
+
+function abrirImagenComprobante() {
+    let imagenB64 = localStorage.getItem("comprobanteImagen");
+    if (imagenB64) {
+        let ventana = window.open("");
+        ventana.document.write(`<title>Comprobante de Transferencia</title><img src="${imagenB64}" style="max-width:100%; height:auto; display:block; margin:auto;"/>`);
+    } else {
+        alert("No se adjuntó ninguna imagen del comprobante.");
+    }
+}
+
+document.getElementById("btnDescargar").addEventListener("click", function() {
+    html2canvas(document.querySelector(".ticket"), {
+        scale: 3,
+        useCORS: true
+    }).then(function(canvas) {
+        const enlace = document.createElement("a");
+        enlace.download = "Ticket-Pickup-" + (localStorage.getItem("folio") || "AromaCafe") + ".png";
+        enlace.href = canvas.toDataURL("image/png");
+        enlace.click();
+    });
+});
+</script>
+
+</body>
+</html>

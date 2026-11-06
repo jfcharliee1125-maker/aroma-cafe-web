@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Nosotros</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; 
+            flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+        
+        .contenido { max-width: 1150px; margin: auto; padding: 75px 25px; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-family: Georgia, serif; font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .historia { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; margin-bottom: 50px; }
+        .historia-texto { background-color: white; padding: 35px; border-radius: 18px; box-shadow: 0 6px 25px #59391b0d; }
+        .historia-texto h3 { font-family: Georgia, serif; font-size: 27px; margin-bottom: 18px; color: #754a30; }
+        .historia-texto p { color: #705748; line-height: 1.9; font-size: 16px; }
+        .historia img { width: 100%; height: 350px; object-fit: cover; border-radius: 18px; }
+        .mision-vision { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; margin-top: 50px; }
+        @media (max-width: 768px) { .historia, .mision-vision { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html" class="activo">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="contenido">
+        <div class="encabezado">
+            <span class="etiqueta">Nuestra esencia</span>
+            <h2>¿Quiénes somos?</h2>
+            <p>Un lugar donde los pequeños momentos se convierten en grandes recuerdos.</p>
+        </div>
+
+        <div class="historia">
+            <div class="historia-texto">
+                <h3>Trayectoria e Historia</h3>
+                <p>
+                    Somos Aroma y Café, una cafetería creada para ofrecer a nuestros clientes un espacio cálido y acogedor donde disfrutar de bebidas de alta calidad, postres artesanales y momentos inolvidables.
+                    <br><br>
+                    Nació de la pasión por el café y el deseo de crear un lugar donde las personas pudieran reunirse, trabajar o simplemente relajarse.
+                </p>
+            </div>
+            <img src="c.jpg" alt="Ambiente cálido de Aroma y Café">
+        </div>
+
+        <div class="mision-vision">
+            <div class="historia-texto">
+                <h3>Misión</h3>
+                <p>Ofrecer bebidas y alimentos de excelente calidad en un ambiente cómodo y amigable, superando las expectativas de nuestros clientes.</p>
+            </div>
+            <div class="historia-texto">
+                <h3>Visión</h3>
+                <p>Ser una cafetería reconocida por la calidad de nuestros productos, la calidez de nuestro servicio y consolidarnos como el lugar favorito.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

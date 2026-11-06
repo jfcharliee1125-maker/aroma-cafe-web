@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Panel de Administración</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #faf3e7; color: #3e2723; padding: 30px 8%; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #e7d4ba; padding-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        h1, h2 { font-family: Georgia, serif; color: #4b3024; }
+        
+        .acciones-header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .btn-volver { background-color: #6f4530; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .btn-volver:hover { background-color: #a76b3f; }
+
+        .btn-eliminar-completados { background-color: #c0392b; color: white; border: none; padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-eliminar-completados:hover { background-color: #e74c3c; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #f0e1cc; }
+        th { background-color: #38251e; color: #e8c99b; font-weight: 600; }
+        tr:hover { background-color: #faf3e7; }
+        
+        .badge { padding: 5px 12px; border-radius: 15px; font-weight: bold; font-size: 13px; text-transform: uppercase; display: inline-block; }
+        .badge-pickup { background-color: #e3f2fd; color: #1565c0; }
+        .badge-delivery { background-color: #fff3e0; color: #e65100; }
+        .badge-pago { background-color: #f3e5f5; color: #6a1b9a; }
+        .badge-turno { background-color: #e8f5e9; color: #2e7d32; }
+        
+        .btn-estado { cursor: pointer; border: none; padding: 6px 14px; border-radius: 15px; font-weight: bold; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
+        .estado-pendiente { background-color: #fff3cd; color: #856404; }
+        .estado-pendiente:hover { background-color: #ffeeba; }
+        .estado-completado { background-color: #d4edda; color: #155724; }
+        .estado-completado:hover { background-color: #c3e6cb; }
+
+        .btn-flecha-nota {
+            background-color: #c08a54;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background-color 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-flecha-nota:hover { background-color: #a76b3f; }
+        .rotada { transform: rotate(90deg); }
+
+        .fila-comentario { background-color: #fdf6ec !important; }
+        .caja-comentario-desplegada { padding: 12px 20px; border-left: 4px solid #c08a54; color: #593724; font-size: 14px; line-height: 1.5; }
+
+        /* Estilos del Panel de Comentarios */
+        .btn-borrar-comentario { background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-borrar-comentario:hover { background-color: #c0392b; }
+        .btn-responder { background-color: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-responder:hover { background-color: #2980b9; }
+        .btn-eliminar-seleccionados { background-color: #e67e22; color: white; border: none; padding: 8px 16px; border-radius: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .btn-eliminar-seleccionados:hover { background-color: #d35400; }
+        .caja-respuesta { background: #f0f7ff; padding: 10px; border-radius: 8px; border-left: 3px solid #3498db; margin-top: 8px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>☕ Panel de Control de Pedidos</h1>
+            <p id="subtituloRol" style="color: #806653; font-weight: bold; margin-top: 5px;"></p>
+        </div>
+        <div class="acciones-header">
+            <button onclick="eliminarCompletados()" class="btn-eliminar-completados">🗑️ Eliminar completados</button>
+            <a href="index.html" onclick="cerrarSesionAdmin()" class="btn-volver">Cerrar Sesión / Volver</a>
+        </div>
+    </header>
+
+    <!-- TABLA DE PEDIDOS -->
+    <table>
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th>Turno</th>
+                <th>Entrega</th>
+                <th>Método de Pago</th>
+                <th>Comentarios</th>
+                <th>Estado (Clic para cambiar)</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-pedidos">
+            <tr>
+                <td colspan="8" style="text-align: center; color: #806653;">Cargando pedidos de MongoDB...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- SECCIÓN / PANEL DE COMENTARIOS DE CLIENTES -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+        <h2>💬 Panel de Comentarios y Calificaciones</h2>
+        <button onclick="eliminarSeleccionados()" class="btn-eliminar-seleccionados">🗑️ Eliminar seleccionados</button>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 40px; text-align: center;"><input type="checkbox" id="seleccionarTodos" onclick="toggleSeleccionarTodo(this)"></th>
+                <th>Usuario</th>
+                <th>Calificación</th>
+                <th>Comentario / Fecha</th>
+                <th>Respuesta Actual</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-comentarios-admin">
+            <tr>
+                <td colspan="6" style="text-align: center; color: #806653;">Cargando opiniones de clientes...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        let esJefe = sessionStorage.getItem("adminAuth") === "true";
+        let turnoEncargado = sessionStorage.getItem("turnoEncargado");
+
+        if (!esJefe && !turnoEncargado) {
+            alert("Acceso denegado. Debes iniciar sesión como administrador o encargado de turno.");
+            window.location.href = "index.html";
+        }
+
+        if (esJefe) {
+            document.getElementById("subtituloRol").innerText = "👑 Vista de Administrador (Jefe) - Todos los turnos";
+        } else {
+            document.getElementById("subtituloRol").innerText = `👤 Vista de Encargado - Turno ${turnoEncargado}`;
+        }
+
+        // --- Cargar Pedidos ---
+        function cargarPedidos() {
+            fetch("http://127.0.0.1:5000/api/pedidos")
+                .then(res => res.json())
+                .then(pedidos => {
+                    let tbody = document.getElementById('tabla-pedidos');
+                    tbody.innerHTML = "";
+
+                    let pedidosFiltrados = pedidos;
+                    if (!esJefe && turnoEncargado) {
+                        pedidosFiltrados = pedidos.filter(p => {
+                            let turnoPedido = p.turno || "Matutino";
+                            return turnoPedido.toLowerCase() === turnoEncargado.toLowerCase();
+                        });
+                    }
+
+                    if (pedidosFiltrados.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No hay pedidos registrados para este turno.</td></tr>';
+                        return;
+                    }
+
+                    pedidosFiltrados.reverse().forEach((p, index) => {
+                        let productosTxt = Array.isArray(p.productos) ? p.productos.join(", ") : p.productos;
+                        let claseEntrega = p.entrega === 'pickup' ? 'badge-pickup' : 'badge-delivery';
+                        let turnoP = p.turno || 'Matutino';
+                        
+                        let metodoPago = p.metodoPago || p.pago || 'No especificado';
+                        if (metodoPago.toLowerCase().startsWith("delivery - ")) {
+                            metodoPago = metodoPago.replace("delivery - ", "");
+                        }
+
+                        let notasCliente = p.notas ? p.notas.trim() : "";
+                        let columnaNotaHTML = "";
+                        let filaDesplegableHTML = "";
+                        
+                        if (notasCliente !== "" && notasCliente.toLowerCase() !== "sin observaciones") {
+                            let idFilaComentario = `comentario-${index}`;
+                            let idBoton = `btn-${index}`;
+                            
+                            columnaNotaHTML = `<button id="${idBoton}" class="btn-flecha-nota" onclick="alternarComentario('${idFilaComentario}', '${idBoton}')" title="Ver comentario">➔</button>`;
+                            
+                            filaDesplegableHTML = `
+                                <tr id="${idFilaComentario}" class="fila-comentario" style="display: none;">
+                                    <td colspan="8">
+                                        <div class="caja-comentario-desplegada">
+                                            <b>📝 Comentarios / Especificaciones del cliente:</b> ${notasCliente}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        } else {
+                            columnaNotaHTML = `<span style="color: #b0a090; font-size: 13px;">Sin comentarios</span>`;
+                        }
+
+                        let estadoActual = p.estado || 'Pendiente';
+                        let claseEstadoBtn = estadoActual.toLowerCase() === 'completado' ? 'estado-completado' : 'estado-pendiente';
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${p.folio || 'N/A'}</strong></td>
+                                <td>${productosTxt}</td>
+                                <td>$${Number(p.total).toFixed(2)} MXN</td>
+                                <td><span class="badge badge-turno">${turnoP}</span></td>
+                                <td><span class="badge ${claseEntrega}">${p.entrega}</span></td>
+                                <td><span class="badge badge-pago">${metodoPago}</span></td>
+                                <td>${columnaNotaHTML}</td>
+                                <td>
+                                    <button onclick="cambiarEstado('${p.folio}', '${estadoActual}')" class="btn-estado ${claseEstadoBtn}">
+                                        ${estadoActual}
+                                    </button>
+                                </td>
+                            </tr>
+                            ${filaDesplegableHTML}
+                        `;
+                    });
+                })
+                .catch(err => {
+                    console.error("Error al obtener pedidos:", err);
+                    document.getElementById('tabla-pedidos').innerHTML = '<tr><td colspan="8" style="text-align: center; color: red;">Error al conectar con el servidor de Flask.</td></tr>';
+                });
+        }
+
+        function alternarComentario(idFila, idBoton) {
+            let fila = document.getElementById(idFila);
+            let boton = document.getElementById(idBoton);
+
+            if (fila.style.display === "none") {
+                fila.style.display = "table-row";
+                boton.classList.add("rotada");
+                boton.title = "Ocultar comentario";
+            } else {
+                fila.style.display = "none";
+                boton.classList.remove("rotada");
+                boton.title = "Ver comentario";
+            }
+        }
+
+        function cambiarEstado(folio, estadoActual) {
+            let nuevoEstado = estadoActual.toLowerCase() === 'pendiente' ? 'Completado' : 'Pendiente';
+
+            fetch(`http://127.0.0.1:5000/api/pedidos/${folio}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: nuevoEstado })
+            })
+            .then(res => res.json())
+            .then(data => cargarPedidos())
+            .catch(err => console.error("Error al actualizar estado:", err));
+        }
+
+        function eliminarCompletados() {
+            if (!confirm("¿Estás seguro de eliminar todos los pedidos marcados como completados?")) return;
+
+            fetch("http://127.0.0.1:5000/api/pedidos/completados", { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.mensaje || "Pedidos completados eliminados.");
+                cargarPedidos();
+            })
+            .catch(err => console.error("Error al eliminar completados:", err));
+        }
+
+        // --- Cargar y Administrar Comentarios ---
+        function cargarComentariosAdmin() {
+            fetch("http://127.0.0.1:5000/api/comentarios")
+                .then(res => res.json())
+                .then(comentarios => {
+                    let tbody = document.getElementById('tabla-comentarios-admin');
+                    tbody.innerHTML = "";
+                    document.getElementById("seleccionarTodos").checked = false;
+
+                    if (comentarios.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No hay opiniones o comentarios recibidos.</td></tr>';
+                        return;
+                    }
+
+                    comentarios.forEach(c => {
+                        let estrellas = "⭐".repeat(c.calificacion || 5);
+                        let respuestaTexto = c.respuesta 
+                            ? `<div class="caja-respuesta"><b>Aroma & Café:</b> ${c.respuesta}</div>` 
+                            : `<span style="color: #999; font-size: 13px;">Sin responder</span>`;
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td style="text-align: center;"><input type="checkbox" class="check-comentario" value="${c._id}"></td>
+                                <td><strong>${c.correo || 'usuario desconocido'}</strong></td>
+                                <td style="color: #e67e22;">${estrellas}</td>
+                                <td>
+                                    <p style="margin-bottom: 4px;">${c.comentario}</p>
+                                    <small style="color: #888;">${c.fecha}</small>
+                                </td>
+                                <td>${respuestaTexto}</td>
+                                <td>
+                                    <div style="display: flex; gap: 6px;">
+                                        <button onclick="responderComentario('${c._id}')" class="btn-responder">💬 Responder</button>
+                                        <button onclick="eliminarComentario('${c._id}')" class="btn-borrar-comentario">🗑️ Borrar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(err => console.error("Error al cargar comentarios:", err));
+        }
+
+        function toggleSeleccionarTodo(masterCheckbox) {
+            let checkboxes = document.querySelectorAll('.check-comentario');
+            checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+        }
+
+        function eliminarComentario(id) {
+            if (!confirm("¿Deseas eliminar este comentario permanentemente?")) return;
+
+            fetch(`http://127.0.0.1:5000/api/comentarios/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.mensaje || "Comentario eliminado.");
+                    cargarComentariosAdmin();
+                })
+                .catch(err => console.error("Error al borrar comentario:", err));
+        }
+
+        function eliminarSeleccionados() {
+            let checkboxes = document.querySelectorAll('.check-comentario:checked');
+            let idsSeleccionados = Array.from(checkboxes).map(cb => cb.value);
+
+            if (idsSeleccionados.length === 0) {
+                alert("Por favor selecciona al menos un comentario para eliminar.");
+                return;
+            }
+
+            if (!confirm(`¿Estás seguro de eliminar los ${idsSeleccionados.length} comentarios seleccionados?`)) return;
+
+            fetch("http://127.0.0.1:5000/api/comentarios/multiples", {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: idsSeleccionados })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.mensaje || "Comentarios eliminados con éxito.");
+                cargarComentariosAdmin();
+            })
+            .catch(err => console.error("Error al eliminar seleccionados:", err));
+        }
+
+        function responderComentario(id) {
+            let respuesta = prompt("Escribe tu respuesta para el cliente:");
+            if (!respuesta || respuesta.trim() === "") return;
+
+            fetch(`http://127.0.0.1:5000/api/comentarios/${id}/responder`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ respuesta: respuesta.trim() })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Respuesta publicada con éxito.");
+                cargarComentariosAdmin();
+            })
+            .catch(err => console.error("Error al responder comentario:", err));
+        }
+
+        function cerrarSesionAdmin() {
+            sessionStorage.removeItem('adminAuth');
+            sessionStorage.removeItem('turnoEncargado');
+        }
+
+        // Carga inicial
+        cargarPedidos();
+        cargarComentariosAdmin();
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Informes - Pedidos a Domicilio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap;
+             gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+
+        .seccion-detalle { max-width: 800px; margin: auto; padding: 75px 25px; min-height: 80vh; }
+        .caja-info { background: white; padding: 45px; border-radius: 18px; box-shadow: 0 6px 25px #59391b0d; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        h1 { font-family: Georgia, serif; font-size: 34px; color: #4b3024; margin: 15px 0 25px 0; }
+        p { color: #705748; line-height: 1.8; font-size: 16px; margin-bottom: 20px; }
+        ul { margin-left: 20px; color: #705748; line-height: 1.8; margin-bottom: 25px; font-size: 16px; }
+        
+        .btn-volver {
+            display: inline-block;
+            background-color: #6f4530;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-volver:hover { background-color: #a76b3f; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="seccion-detalle">
+        <div class="caja-info">
+            <span class="etiqueta">Información detallada</span>
+            <h1>🚀 Pedidos a Domicilio y Para Llevar</h1>
+            <p>Disfruta del auténtico sabor de nuestro café y nuestros postres recién horneados en la comodidad de tu hogar, oficina o camino a 
+                cualquier lugar.</p> 
+            <p><b>¿Cómo funciona nuestro servicio?</b></p>
+            <ul>
+                <li><b>Para llevar (Pick-up):</b> Realiza tu orden directamente desde nuestra sección de pedidos y pasa a recogerla sin filas ni esperas.
+            </li>
+                <li><b>Servicio a domicilio:</b> Disponible en un radio de 5 km alrededor de nuestra sucursal. 
+                    El tiempo estimado de entrega es de 30 a 45 minutos.</li>
+                <li><b>Empaque térmico especial:</b> Garantizamos que tus bebidas se mantengan calientes y tus alimentos crujientes hasta llegar 
+                    a tus manos.</li>
+            </ul>
+            <p>Para consultas rápidas sobre cobertura o pedidos especiales al por mayor, comunícate al <b>(555) 789-4521</b>.</p>
+            <a href="servicios.html" class="btn-volver">← Volver a Servicios</a>
+        </div>
+    </section>
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

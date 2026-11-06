@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Informes - Eventos Privados</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; 
+            flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+
+        .seccion-detalle { max-width: 850px; margin: auto; padding: 75px 25px; min-height: 80vh; }
+        .caja-info { background: white; padding: 45px; border-radius: 18px; box-shadow: 0 6px 25px #59391b0d; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        h1 { font-family: Georgia, serif; font-size: 34px; color: #4b3024; margin: 15px 0 20px 0; }
+        p { color: #705748; line-height: 1.8; font-size: 16px; margin-bottom: 20px; }
+        ul { margin-left: 20px; color: #705748; line-height: 1.8; margin-bottom: 25px; font-size: 16px; }
+
+        .tabla-cotizacion {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: #fffaf2;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e7d4ba;
+        }
+        .tabla-cotizacion th, .tabla-cotizacion td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e7d4ba;
+            font-size: 15px;
+        }
+        .tabla-cotizacion th {
+            background-color: #f0e1cc;
+            color: #4b3024;
+            font-family: Georgia, serif;
+            font-size: 17px;
+        }
+        .tabla-cotizacion td {
+            color: #705748;
+        }
+        .tabla-cotizacion tr:last-child td {
+            border-bottom: none;
+        }
+        .precio-cotizacion {
+            font-weight: bold;
+            color: #a76b3f;
+        }
+        
+        .btn-volver {
+            display: inline-block;
+            background-color: #6f4530;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+        .btn-volver:hover { background-color: #a76b3f; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="seccion-detalle">
+        <div class="caja-info">
+            <span class="etiqueta">Información detallada</span>
+            <h1>🎉 Renta y Organización de Eventos Privados</h1>
+            <p>Haz que tus momentos más importantes ocurran en un ambiente cálido, elegante y con el mejor aroma a café artesanal.</p>
+            
+            <p><b>¿Qué ofrecemos para tus eventos?</b></p>
+            <ul>
+                <li><b>Espacio exclusivo:</b> Ideal para pequeñas reuniones, talleres, presentaciones de libros, cumpleaños o celebraciones íntimas.</li>
+                <li><b>Catering personalizado:</b> Barras de café especializadas con barista en vivo, selección de postres artesanales y baguettes
+                     gourmet.</li>
+                <li><b>Equipamiento:</b> Disponibilidad de sistema de sonido ambiental y conexiones para proyector o presentaciones.</li>
+            </ul>
+
+            <p><b>Cotización estimada por cantidad de personas:</b></p>
+            
+            <table class="tabla-cotizacion">
+                <thead>
+                    <tr>
+                        <th>Capacidad</th>
+                        <th>Incluye</th>
+                        <th>Precio Estimado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>10 a 15 personas</b><br><small>(Paquete Íntimo)</small></td>
+                        <td>Renta de espacio por 3 horas, barra libre de café espresso/capuchino y charola de postres.</td>
+                        <td class="precio-cotizacion">$2,500 MXN</td>
+                    </tr>
+                    <tr>
+                        <td><b>16 a 25 personas</b><br><small>(Paquete Mediano)</small></td>
+                        <td>Renta de espacio por 4 horas, barra de bebidas, postres y mini baguettes gourmet.</td>
+                        <td class="precio-cotizacion">$4,200 MXN</td>
+                    </tr>
+                    <tr>
+                        <td><b>26 a 35 personas</b><br><small>(Paquete Completo / Exclusivo)</small></td>
+                        <td>Cierre parcial del local por 4 horas, baristas en vivo, menú completo y equipo de sonido.</td>
+                        <td class="precio-cotizacion">$6,500 MXN</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Para apartar tu fecha o solicitar requerimientos especiales, escríbenos a <b>contacto@aromaycafe.com</b> o llámanos al 
+                <b>(555) 789-4521</b>.</p>
+
+            <a href="servicios.html" class="btn-volver">← Volver a Servicios</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

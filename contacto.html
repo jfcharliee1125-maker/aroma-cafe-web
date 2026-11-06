@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Contacto</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; gap:
+             15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+
+        .contacto-seccion { max-width: 900px; margin: auto; padding: 75px 25px; min-height: 80vh; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-family: Georgia, serif; font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .contacto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 30px; }
+        .contacto-caja { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .contacto-caja h3 { color: #593724; margin-bottom: 10px; font-size: 19px; font-family: Georgia, serif; }
+        .contacto-caja p, .contacto-caja li { color: #705748; line-height: 1.6; font-size: 15px; list-style: none; }
+        .contacto-caja a { color: #a76b3f; font-weight: bold; text-decoration: none; }
+        .contacto-caja a:hover { text-decoration: underline; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html" class="activo">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="contacto-seccion">
+        <div class="encabezado">
+            <span class="etiqueta">Nos encantará recibirte</span>
+            <h2>¡Contáctanos y Visítanos!</h2>
+            <p>Disfruta de un café, algo delicioso y un ambiente acogedor.</p>
+        </div>
+
+        <div class="contacto-grid">
+            <div class="contacto-caja">
+                <h3>📍 Dirección</h3>
+                <p>Av. de los Aromas #125,<br>Colonia Café Dorado,<br>Ciudad del Sabor, México.</p>
+            </div>
+
+            <div class="contacto-caja">
+                <h3>📞 Teléfono y Correo</h3>
+                <p><b>Tel:</b> (555) 789-4521<br><b>Email:</b> contacto@aromaycafe.com</p>
+            </div>
+
+            <div class="contacto-caja">
+                <h3>🕒 Horario de atención</h3>
+                <p>Lunes a Viernes: 7:00 a.m. - 9:00 p.m.<br>Sábados: 8:00 a.m. - 10:00 p.m.<br>Domingos: 8:00 a.m. - 8:00 p.m.</p>
+            </div>
+
+            <div class="contacto-caja">
+                <h3>📱 Redes Sociales</h3>
+                <p>Síguenos en nuestras redes:</p>
+                <a href="https://www.instagram.com/" target="_blank">Página de Instagram →</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

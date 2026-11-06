@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Ordenar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; 
+            gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; }
+
+        .seccion-orden { background-color: #faf3e7; padding: 75px 8%; max-width: 900px; margin: auto; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-family: Georgia, serif; font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .form-orden { background: white; padding: 40px; border-radius: 18px; box-shadow: 0 6px 25px #59391b0d; }
+        .item-orden { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f0e1cc; flex-wrap: wrap; gap: 10px; }
+        .item-orden label { font-weight: 600; color: #593724; font-size: 17px; }
+        .item-orden input { width: 70px; padding: 8px; text-align: center; border: 2px solid #e7d4ba; border-radius: 8px; font-size: 16px; }
+        
+        .boton { display: inline-block; background-color: #6f4530; color: white; padding: 15px 27px; border-radius: 30px; text-decoration: none; 
+            font-weight: bold; transition: 0.3s; border: none; cursor: pointer; }
+        .boton:hover { background-color: #a76b3f; transform: translateY(-3px); box-shadow: 0 8px 18px #6f453044; }
+
+        .resumen-total { margin-top: 30px; padding: 20px; background-color: #f0e1cc; border-radius: 12px; }
+        .resumen-total h3 { font-size: 24px; color: #38251e; text-align: right; }
+
+        .tipo-entrega-container, .horarios-container, .notas-container {
+            margin: 20px 0;
+        }
+        .tipo-entrega-container label, .horarios-container label, .notas-container label {
+            display: block;
+            font-weight: 600;
+            color: #593724;
+            margin-bottom: 10px;
+        }
+        .notas-container textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e7d4ba;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background-color: #fffdf9;
+            color: #3e2723;
+            resize: vertical;
+        }
+        .notas-container textarea:focus {
+            border-color: #c08a54;
+            box-shadow: 0 0 8px rgba(192, 138, 84, 0.3);
+        }
+
+        .opciones-entrega {
+            display: flex;
+            gap: 15px;
+        }
+        .opcion-card {
+            flex: 1;
+            border: 2px solid #e7d4ba;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #fffdf9;
+        }
+        .opcion-card input[type="radio"] {
+            display: none;
+        }
+        .opcion-card h4 {
+            color: #593724;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        .opcion-card p {
+            font-size: 13px;
+            color: #806653;
+        }
+        .opcion-card.seleccionado {
+            border-color: #6f4530;
+            background-color: #faebd7;
+            box-shadow: 0 4px 12px rgba(111, 69, 48, 0.15);
+        }
+
+        .caja-horarios {
+            background: #fdf6ec;
+            border: 1px solid #d6b07f;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #4b3024;
+            line-height: 1.6;
+        }
+        .caja-horarios ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="index.html">Inicio</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="menu.html">Menú</a>
+            <a href="galeria.html">Galería</a>
+            <a href="servicios.html">Servicios</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="ordenar.html" class="btn-ordenar-nav activo">🛒 Ordenar</a>
+        </div>
+    </nav>
+
+    <section class="seccion-orden">
+        <div class="encabezado">
+            <span class="etiqueta">Crea tu pedido</span>
+            <h2>Realiza tu Orden</h2>
+            <p>Selecciona la cantidad que deseas de cada producto:</p>
+        </div>
+
+        <div class="form-orden">
+            <div class="item-orden">
+                <label>☕ Café Espresso ($50)</label>
+                <input type="number" id="cant-espresso" min="0" value="0" oninput="calcularTotal()">
+            </div>
+
+            <div class="item-orden">
+                <label>🤎 Capuchino clásico ($45)</label>
+                <input type="number" id="cant-capuchino" min="0" value="0" oninput="calcularTotal()">
+            </div>
+
+            <div class="item-orden">
+                <label>🍫 Chocomilk ($35)</label>
+                <input type="number" id="cant-chocomilk" min="0" value="0" oninput="calcularTotal()">
+            </div>
+
+            <div class="item-orden">
+                <label>🍰 Pastel de chocolate ($90)</label>
+                <input type="number" id="cant-pastel" min="0" value="0" oninput="calcularTotal()">
+            </div>
+
+            <div class="item-orden">
+                <label>🥖 Baguette ($75)</label>
+                <input type="number" id="cant-baguette" min="0" value="0" oninput="calcularTotal()">
+            </div>
+
+            <div class="resumen-total">
+                
+                <!-- APARTADO DE HORARIOS INFORMATIVO -->
+                <div class="horarios-container">
+                    <label>🕒 Turnos y Horarios de Atención</label>
+                    <div class="caja-horarios">
+                        <p><b>Lunes a Viernes:</b> Matutino (7:00 a.m. - 2:00 p.m.) | Vespertino (2:00 p.m. - 9:00 p.m.)</p>
+                        <p style="margin-top: 6px;"><b>Sábados:</b> Matutino (8:00 a.m. - 2:00 p.m.) | Vespertino (2:00 p.m. - 10:00 p.m.)</p>
+                        <p style="margin-top: 6px;"><b>Domingos:</b> Matutino (8:00 a.m. - 2:00 p.m.) | Vespertino (2:00 p.m. - 9:00 p.m.)</p>
+                    </div>
+                </div>
+
+                <!-- NUEVO APARTADO PARA NOTAS / ESPECIFICACIONES -->
+                <div class="notas-container">
+                    <label for="notasPedido">📝 Notas o especificaciones especiales (opcional)</label>
+                    <textarea id="notasPedido" rows="3" placeholder="Ej. Café con leche deslactosada, sin azúcar, bien caliente..."></textarea>
+                </div>
+
+                <div class="tipo-entrega-container">
+                    <label>¿Cómo deseas recibir tu pedido?</label>
+                    <div class="opciones-entrega">
+                        <div class="opcion-card" id="card-pickup" onclick="seleccionarEntrega('pickup')">
+                            <input type="radio" name="tipoEntrega" id="pickup" value="pickup">
+                            <h4>🏃‍♂️ Pickup</h4>
+                            <p>Recoger en tienda</p>
+                        </div>
+                        <div class="opcion-card" id="card-delivery" onclick="seleccionarEntrega('delivery')">
+                            <input type="radio" name="tipoEntrega" id="delivery" value="delivery">
+                            <h4>🛵 Delivery</h4>
+                            <p>Envío a domicilio</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="detalle-precios" style="text-align: right; font-size: 15px; color: #593724; margin-bottom: 5px;">
+                    Subtotal: $0.00 | IVA (16%): $0.00
+                </div>
+                <h3 id="resultado-total" style="margin-top: 10px;">Total a pagar: $0.00 MXN</h3>
+                
+                <div style="text-align: right;">
+                    <button type="button" class="boton" style="margin-top: 15px; background-color: #38251e;" onclick="enviarPedido()">
+                        Confirmar Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calcularTotal() {
+            let espresso = parseInt(document.getElementById('cant-espresso').value) || 0;
+            let capuchino = parseInt(document.getElementById('cant-capuchino').value) || 0;
+            let chocomilk = parseInt(document.getElementById('cant-chocomilk').value) || 0;
+            let pastel = parseInt(document.getElementById('cant-pastel').value) || 0;
+            let baguette = parseInt(document.getElementById('cant-baguette').value) || 0;
+
+            let subtotal = (espresso * 50) + (capuchino * 45) + (chocomilk * 35) + (pastel * 90) + (baguette * 75);
+            let iva = subtotal * 0.16;
+            let totalConIva = subtotal + iva;
+
+            document.getElementById('detalle-precios').innerText = `Subtotal: $${subtotal.toFixed(2)} | IVA (16%): $${iva.toFixed(2)}`;
+            document.getElementById('resultado-total').innerText = "Total a pagar: $" + totalConIva.toFixed(2) + " MXN";
+            
+            return { subtotal, iva, totalConIva };
+        }
+
+        let tipoEntregaSeleccionada = "pickup";
+        
+        window.addEventListener("DOMContentLoaded", () => {
+            seleccionarEntrega('pickup');
+        });
+
+        function seleccionarEntrega(tipo) {
+            tipoEntregaSeleccionada = tipo;
+            let radioBtn = document.getElementById(tipo);
+            if (radioBtn) radioBtn.checked = true;
+            
+            let cardPickup = document.getElementById('card-pickup');
+            let cardDelivery = document.getElementById('card-delivery');
+
+            if (tipo === 'pickup') {
+                cardPickup.classList.add('seleccionado');
+                cardDelivery.classList.remove('seleccionado');
+            } else {
+                cardDelivery.classList.add('seleccionado');
+                cardPickup.classList.remove('seleccionado');
+            }
+        }
+
+        function determinarTurnoAutomatico() {
+            let ahora = new Date();
+            let dia = ahora.getDay();
+            let hora = ahora.getHours();
+
+            if (dia >= 1 && dia <= 5) {
+                return (hora >= 7 && hora < 14) ? "Matutino" : "Vespertino";
+            } else if (dia === 6) {
+                return (hora >= 8 && hora < 14) ? "Matutino" : "Vespertino";
+            } else {
+                return (hora >= 8 && hora < 14) ? "Matutino" : "Vespertino";
+            }
+        }
+
+        function enviarPedido() {
+            let espresso = parseInt(document.getElementById('cant-espresso').value) || 0;
+            let capuchino = parseInt(document.getElementById('cant-capuchino').value) || 0;
+            let chocomilk = parseInt(document.getElementById('cant-chocomilk').value) || 0;
+            let pastel = parseInt(document.getElementById('cant-pastel').value) || 0;
+            let baguette = parseInt(document.getElementById('cant-baguette').value) || 0;
+            let notas = document.getElementById('notasPedido').value.trim();
+
+            let calculo = calcularTotal();
+
+            if (calculo.totalConIva === 0) {
+                alert("Por favor selecciona al menos un producto para ordenar.");
+                return;
+            }
+
+            let turnoAutomatico = determinarTurnoAutomatico();
+            let folioGenerado = "CAF-" + Math.floor(100000 + Math.random() * 900000);
+
+            localStorage.setItem("folio", folioGenerado);
+            localStorage.setItem("espresso", espresso);
+            localStorage.setItem("capuchino", capuchino);
+            localStorage.setItem("chocomilk", chocomilk);
+            localStorage.setItem("pastel", pastel);
+            localStorage.setItem("baguette", baguette);
+            localStorage.setItem("subtotalBase", calculo.subtotal.toFixed(2));
+            localStorage.setItem("totalCompra", calculo.totalConIva.toFixed(2));
+            localStorage.setItem("tipoEntrega", tipoEntregaSeleccionada);
+            localStorage.setItem("turnoPedido", turnoAutomatico);
+            localStorage.setItem("notasPedido", notas); // Guardamos las notas localmente para el ticket
+
+            let productosArray = [];
+            if (espresso > 0) productosArray.push(`Café Espresso x${espresso}`);
+            if (capuchino > 0) productosArray.push(`Capuchino clásico x${capuchino}`);
+            if (chocomilk > 0) productosArray.push(`Chocomilk x${chocomilk}`);
+            if (pastel > 0) productosArray.push(`Pastel de chocolate x${pastel}`);
+            if (baguette > 0) productosArray.push(`Baguette x${baguette}`);
+
+            let datosPedido = {
+                folio: folioGenerado,
+                productos: productosArray,
+                total: parseFloat(calculo.totalConIva.toFixed(2)),
+                metodoPago: "Pendiente",
+                entrega: tipoEntregaSeleccionada,
+                turno: turnoAutomatico,
+                notas: notas || "Sin observaciones" // Se envía a MongoDB
+            };
+
+            fetch("http://127.0.0.1:5000/api/guardar-pedido", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datosPedido)
+            }).catch(err => console.log("Modo local activo"));
+
+            if (tipoEntregaSeleccionada === "pickup") {
+                window.location.href = "mp.html";
+            } else {
+                window.location.href = "delivery.html";
+            }
+        }
+    </script>
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>
