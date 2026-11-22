@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Galería</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; 
+            gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; display: inline-flex; align-items: center; gap: 6px; }
+        .badge-carrito { background-color: #38251e; color: #e8c99b; padding: 2px 8px; border-radius: 12px; font-size: 13px; font-weight: bold; }
+
+        .galeria-seccion { max-width: 900px; margin: auto; padding: 75px 25px; min-height: 80vh; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-family: Georgia, serif; font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .galeria-contenedor { background: white; padding: 40px; border-radius: 18px; box-shadow: 0 6px 25px #59391b0d; }
+        .galeria-contenedor ul { list-style: disc; padding-left: 20px; }
+        .galeria-contenedor li { font-size: 19px; color: #593724; margin-top: 25px; font-weight: 600; }
+        
+        .galeria-contenedor img { 
+            max-width: 100%; 
+            height: 220px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            margin-top: 12px; 
+            margin-bottom: 12px; 
+            border: 1px solid #e7d4ba; 
+            display: block;
+        }
+
+        .galeria-contenedor p { color: #705748; font-size: 16px; line-height: 1.6; margin-bottom: 25px; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="/">Inicio</a>
+            <a href="/nosotros">Nosotros</a>
+            <a href="/menu">Menú</a>
+            <a href="/galeria" class="activo">Galería</a>
+            <a href="/servicios">Servicios</a>
+            <a href="/contacto">Contacto</a>
+            <a href="/ordenar" class="btn-ordenar-nav">🛒 Carrito</a>
+        </div>
+    </nav>
+
+    <section class="galeria-seccion">
+        <div class="encabezado">
+            <span class="etiqueta">Nuestros productos en detalle</span>
+            <h2>Galería Fotográfica</h2>
+            <p>Descubre a través de nuestra galería el sabor y la calidad de cada una de nuestras especialidades.</p>
+        </div>
+
+        <div class="galeria-contenedor">
+            <ul>
+                <!-- PLATILLOS -->
+                <li>Pastel de chocolate: <span style="font-weight: normal; color: #705748;">Suave y esponjoso pastel elaborado con chocolate de alta calidad.</span></li>
+                <img src="{{ url_for('static', filename='pa.jpg') }}" alt="Pastel de chocolate">
+                <p>Una deliciosa porción de pastel con un intenso sabor a chocolate que complementa cualquier café.</p>
+
+                <li>Baguette: <span style="font-weight: normal; color: #705748;">Pan crujiente relleno de ingredientes frescos.</span></li>
+                <img src="{{ url_for('static', filename='ba.jpg') }}" alt="Baguette">
+                <p>Preparado diariamente con ingredientes seleccionados para garantizar el mejor sabor crujiente.</p>
+
+                <li>Croissant de Jamón y Queso: <span style="font-weight: normal; color: #705748;">Pan hojaldrado con mantequilla, relleno de jamón de pavo y queso gouda derretido.</span></li>
+                <img src="{{ url_for('static', filename='croissant.jpg') }}" alt="Croissant de Jamón y Queso">
+                <p>Una opción calientita, hojaldrada y crujiente ideal para el desayuno o la tarde.</p>
+
+                <li>Panini de Pollo al Pesto: <span style="font-weight: normal; color: #705748;">Pechuga de pollo a la plancha, queso mozzarella, jitomate deshidratado y pesto en ciabatta.</span></li>
+                <img src="{{ url_for('static', filename='panini.jpg') }}" alt="Panini de Pollo al Pesto">
+                <p>Tostado a la perfección con un toque aromático de albahaca y aceite de oliva.</p>
+
+                <li>Bagel de Salmón: <span style="font-weight: normal; color: #705748;">Bagel de ajonjolí con queso crema a las finas hierbas, salmón ahumado y pepino.</span></li>
+                <img src="{{ url_for('static', filename='bagel.jpg') }}" alt="Bagel de Salmón">
+                <p>Frescura y elegancia en cada mordisco con finas láminas de salmón de alta calidad.</p>
+
+                <li>Club Sandwich Clásico: <span style="font-weight: normal; color: #705748;">Tres capas con pavo, tocino crujiente, queso americano, lechuga, jitomate y papas.</span></li>
+                <img src="{{ url_for('static', filename='club.jpg') }}" alt="Club Sandwich Clásico">
+                <p>El sándwich tradicional por excelencia, abundante y acompañado de papas crujientes.</p>
+
+                <li>Toast de Aguacate: <span style="font-weight: normal; color: #705748;">Pan de masa madre, puré de aguacate, pepitas, chile en hojuelas y dos huevos pochados.</span></li>
+                <img src="{{ url_for('static', filename='toast.jpg') }}" alt="Toast de Aguacate">
+                <p>Nutritivo, moderno y delicioso, coronado con huevos pochados preparados al momento.</p>
+
+                <li>Chilaquiles con Pollo: <span style="font-weight: normal; color: #705748;">Totopos bañados en salsa verde o roja, pollo deshebrado, crema y queso fresco.</span></li>
+                <img src="{{ url_for('static', filename='chilaquiles.jpg') }}" alt="Chilaquiles con Pollo">
+                <p>El toque mexicano reconfortante que nunca falla para empezar el día con energía.</p>
+
+                <li>Ensalada César con Pollo: <span style="font-weight: normal; color: #705748;">Lechuga romana, tiras de pollo a la parrilla, crotones de ajo y aderezo César cremoso.</span></li>
+                <img src="{{ url_for('static', filename='ensalada.jpg') }}" alt="Ensalada César con Pollo">
+                <p>Una opción ligera, fresca y crujiente con pechuga de pollo asada al momento.</p>
+
+                <li>Waffles con Frutos Rojos: <span style="font-weight: normal; color: #705748;">Waffle dorado por fuera y suave por dentro, servido con fresas, zarzamoras y miel.</span></li>
+                <img src="{{ url_for('static', filename='waffle.jpg') }}" alt="Waffles con Frutos Rojos">
+                <p>Dulces, esponjosos y acompañados de una colorida selección de frutos rojos frescos.</p>
+
+                <!-- BEBIDAS -->
+                <li>Café Espresso: <span style="font-weight: normal; color: #705748;">Café intenso y aromático preparado con granos seleccionados.</span></li>
+                <img src="{{ url_for('static', filename='exp.jpg') }}" alt="Café Espresso">
+                <p>Una taza de espresso recién preparado, con un sabor fuerte y un aroma que despierta los sentidos.</p>
+
+                <li>Capuchino clásico: <span style="font-weight: normal; color: #705748;">Deliciosa combinación de espresso, leche vaporizada y espuma cremosa.</span></li>
+                <img src="{{ url_for('static', filename='capu.jpg') }}" alt="Capuchino clásico">
+                <p>Nuestro capuchino destaca por su cremosa espuma y el equilibrio perfecto entre café y leche.</p>
+
+                <li>Chocomilk: <span style="font-weight: normal; color: #705748;">Bebida dulce y refrescante elaborada con leche y chocolate.</span></li>
+                <img src="{{ url_for('static', filename='choco.jpg') }}" alt="Chocomilk">
+                <p>Ideal para quienes prefieren una bebida suave y dulce, perfecta para cualquier momento del día.</p>
+
+                <li>Latte de Vainilla o Caramelo: <span style="font-weight: normal; color: #705748;">Espresso combinado con leche caliente vaporizada y jarabe suave de vainilla o caramelo.</span></li>
+                <img src="{{ url_for('static', filename='latte.jpg') }}" alt="Latte de Vainilla o Caramelo">
+                <p>Una caricia dulce y reconfortante para acompañar tus tardes.</p>
+
+                <li>Chai Tea Latte: <span style="font-weight: normal; color: #705748;">Té negro concentrado con especias aromáticas (canela, cardamomo, jengibre) y leche.</span></li>
+                <img src="{{ url_for('static', filename='chai.jpg') }}" alt="Chai Tea Latte">
+                <p>Exóticas especias orientales perfectamente integradas con una textura cremosa.</p>
+
+                <li>Iced Caramel Macchiato: <span style="font-weight: normal; color: #705748;">Leche fría con hielo, vainilla, coronada con shot de espresso y espiral de caramelo.</span></li>
+                <img src="{{ url_for('static', filename='iced.jpg') }}" alt="Iced Caramel Macchiato">
+                <p>Refrescante, dulce y con el balance exacto de cafeína fría.</p>
+
+                <li>Matcha Latte Helado: <span style="font-weight: normal; color: #705748;">Té matcha ceremonial batido con leche de tu elección, hielo y endulzante natural.</span></li>
+                <img src="{{ url_for('static', filename='matcha.jpg') }}" alt="Matcha Latte Helado">
+                <p>Todo el poder antioxidante del té verde japonés en una presentación fría y cremosa.</p>
+
+                <li>Frappuccino Moka: <span style="font-weight: normal; color: #705748;">Bebida helada a punto de granizado con espresso, leche, chocolate, hielo y crema batida.</span></li>
+                <img src="{{ url_for('static', filename='frappe.jpg') }}" alt="Frappuccino Moka">
+                <p>Un frappé indulgente y cremoso con notas intensas de chocolate y café.</p>
+
+                <li>Smoothie de Frutos Rojos: <span style="font-weight: normal; color: #705748;">Licuado denso de fresas, moras y arándanos congelados mezclados con yogur griego.</span></li>
+                <img src="{{ url_for('static', filename='smoothie.jpg') }}" alt="Smoothie de Frutos Rojos">
+                <p>Una explosión frutal, cremosa y llena de frescura natural.</p>
+
+                <li>Tisana Frutal Fría: <span style="font-weight: normal; color: #705748;">Infusión refrescante de frutas deshidratadas (frutos del bosque y jamaica) con hielo.</span></li>
+                <img src="{{ url_for('static', filename='tisana.jpg') }}" alt="Tisana Frutal Fría">
+                <p>Libre de cafeína, frutal, colorida y sumamente refrescante.</p>
+            </ul>
+        </div>
+    </section>
+
+    <script>
+        function actualizarBadgeCarrito() {
+            let carrito = JSON.parse(localStorage.getItem('carritoAroma')) || {};
+            let total = Object.values(carrito).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+            let badge = document.getElementById('contadorCarrito');
+            if (badge) badge.innerText = total;
+        }
+        window.addEventListener('DOMContentLoaded', actualizarBadgeCarrito);
+    </script>
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>

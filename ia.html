@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Don Barista</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #faf3e7; color: #3e2723; }
+
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 18px; border-radius: 25px; transition: all 0.3s ease; font-weight: 500; font-size: 15px; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; transform: translateY(-2px); }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; box-shadow: 0 4px 12px rgba(192,138,84,0.4); }
+
+        .contenedor-ia { max-width: 950px; margin: 50px auto; padding: 0 20px; }
+        .tarjeta-ia { background: #ffffff; border-radius: 20px; padding: 35px; border: 2px solid #e7d4ba; box-shadow: 0 10px 30px rgba(56, 37, 30, 0.1); }
+
+        .cabecera-choom { display: flex; align-items: center; gap: 18px; border-bottom: 2px solid #f0e1cc; padding-bottom: 20px; margin-bottom: 25px; }
+        .avatar-grande { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #c08a54; object-fit: cover; background: #38251e; }
+        .cabecera-choom h2 { color: #4b3024; font-size: 24px; }
+        .badge-tiempo { display: inline-block; background: #eddac2; color: #593724; padding: 4px 12px; border-radius: 15px; font-size: 13px; font-weight: bold; margin-top: 5px; }
+
+        .burbuja-promo-ia {
+            background: linear-gradient(135deg, #8e5a24, #c08a54);
+            color: #fff8ed;
+            padding: 18px 22px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            font-size: 15px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(142, 90, 36, 0.2);
+            animation: fadeIn 0.4s ease;
+            text-align: center;
+        }
+        .burbuja-promo-ia b { color: #ffe6bc; font-size: 16px; display: block; margin-bottom: 8px; }
+        .burbuja-promo-ia ul { list-style-type: none; line-height: 1.8; }
+
+        .paso-pregunta { display: none; animation: fadeIn 0.4s ease; }
+        .paso-pregunta.activo { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .titulo-pregunta { font-size: 20px; color: #593724; margin-bottom: 20px; font-weight: 600; text-align: center; }
+        .grid-opciones { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .btn-opcion { background: #fffaf2; border: 2px solid #e7d4ba; padding: 16px 20px; border-radius: 14px; text-align: center; font-size: 16px; color: #3e2723; cursor: pointer; transition: 0.2s; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .btn-opcion:hover { background: #faebd7; border-color: #c08a54; transform: translateY(-2px); }
+
+        #alerta-cerrado { display: none; text-align: center; padding: 25px; background: #fdf2f2; border: 2px solid #f5c6cb; border-radius: 15px; color: #721c24; margin-top: 15px; }
+        #alerta-cerrado h3 { font-size: 22px; margin-bottom: 10px; font-family: Georgia, serif; }
+
+        #resultado-ia { display: none; animation: fadeIn 0.5s ease; }
+        .encabezado-resultados { text-align: center; margin-bottom: 28px; }
+        .encabezado-resultados h3 { font-size: 22px; color: #4b3024; margin-bottom: 8px; }
+        .encabezado-resultados p { color: #806653; font-size: 15px; }
+
+        /* Mayor espaciado entre tarjetas de respuesta */
+        .grid-top3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin-bottom: 30px; }
+        .card-recomendacion { background: #fffaf2; border: 2px solid #e7d4ba; border-radius: 16px; padding: 24px 20px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: 0.3s; }
+        .card-recomendacion:hover { border-color: #c08a54; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(56, 37, 30, 0.1); }
+        .card-recomendacion.top-1 { border: 2px solid #c08a54; background: #fff6e8; }
+
+        .badge-porcentaje { color: white; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; display: inline-block; margin-bottom: 14px; }
+        .bg-alto { background: #4CAF50; }
+        .bg-medio { background: #d9822b; }
+        .bg-alternativa { background: #6f4530; }
+
+        .img-recomendada { width: 100%; height: 155px; object-fit: cover; border-radius: 12px; margin-bottom: 16px; border: 1px solid #e7d4ba; }
+        
+        /* Formato solicitado: ------ Producto ------ / Precio / Descripción */
+        .nombre-prod { font-size: 18px; color: #4b3024; margin-bottom: 6px; font-weight: bold; text-align: center; letter-spacing: 0.5px; }
+        .precio-prod { font-size: 17px; font-weight: bold; color: #a76b3f; margin-bottom: 14px; text-align: center; }
+        .desc-prod { color: #806653; font-size: 14px; margin-bottom: 18px; line-height: 1.5; flex-grow: 1; text-align: center; }
+
+        .control-cantidad { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 14px; }
+        .btn-cant { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #c08a54; background: #ffffff; color: #593724; font-size: 17px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-cant:hover { background: #c08a54; color: white; }
+        .num-cant { font-size: 17px; font-weight: bold; color: #38251e; min-width: 24px; text-align: center; }
+
+        .btn-agregar-card { width: 100%; padding: 10px 16px; border-radius: 22px; border: none; background: #c08a54; color: white; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        .btn-agregar-card:hover { background: #98653b; }
+
+        .acciones-finales { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; border-top: 1px solid #f0e1cc; padding-top: 20px; }
+        .btn-accion { padding: 12px 24px; border-radius: 25px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; transition: 0.3s; text-decoration: none; }
+        .btn-ir-carrito { background: #38251e; color: white; }
+        .btn-reintentar { background: #eddac2; color: #593724; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="/">Inicio</a>
+            <a href="/nosotros">Nosotros</a>
+            <a href="/menu">Menú</a>
+            <a href="/galeria">Galería</a>
+            <a href="/servicios">Servicios</a>
+            <a href="/contacto">Contacto</a>
+            <a href="/ordenar" class="btn-ordenar-nav">🛒 Carrito</a>
+        </div>
+    </nav>
+
+    <div class="contenedor-ia">
+        <div class="tarjeta-ia">
+            <div class="cabecera-choom">
+                <img src="{{ url_for('static', filename='fino.jpg') }}" alt="Don Barista" class="avatar-grande">
+                <div>
+                    <h2>Don Barista</h2>
+                    <span class="badge-tiempo" id="badge-momento">Verificando horario...</span>
+                </div>
+            </div>
+
+            <!-- BURBUJA DE AVISO DE TODAS LAS PROMOCIONES ACTIVAS -->
+            <div id="burbujaPromoIA" class="burbuja-promo-ia">
+                🔥 <b>¡Hola, choom! Te cuento que hoy tenemos estas promociones activas:</b>
+                <ul id="listaPromosIA"></ul>
+                <p style="margin-top: 10px; font-size: 13px; color: #ffe6bc;">¡Puedes aprovechar la que más te guste desde el menú!</p>
+            </div>
+
+            <!-- AVISO DE TIENDA CERRADA -->
+            <div id="alerta-cerrado">
+                <h3>🔒 Cafetería Cerrada en este momento</h3>
+                <p id="texto-horario-cerrado" style="font-size: 15px; line-height: 1.6; margin-bottom: 15px;"></p>
+                <a href="/" class="btn-accion btn-reintentar" style="display: inline-block;">Volver al Inicio</a>
+            </div>
+
+            <!-- CONTENEDOR DE PREGUNTAS -->
+            <div id="contenedor-cuestionario">
+                <!-- PREGUNTA 1 -->
+                <div class="paso-pregunta activo" id="paso-1">
+                    <p class="titulo-pregunta" id="texto-p1">¿Qué nivel de antojo traes en este momento?</p>
+                    <div class="grid-opciones" id="opciones-p1"></div>
+                </div>
+
+                <!-- PREGUNTA 2 -->
+                <div class="paso-pregunta" id="paso-2">
+                    <p class="titulo-pregunta">2. ¿Hacia qué perfil de sabor te inclinas hoy?</p>
+                    <div class="grid-opciones">
+                        <button class="btn-opcion" onclick="responder(2, 'dulce')">🍫 Dulce, achocolatado o con frutas</button>
+                        <button class="btn-opcion" onclick="responder(2, 'salado')">🧀 Salado, con queso, carnes o aguacate</button>
+                        <button class="btn-opcion" onclick="responder(2, 'cafe_especias')">☕ Intenso, sabor a café puro o especias</button>
+                        <button class="btn-opcion" onclick="responder(2, 'fresco')">🌿 Fresco, ligero o herbal</button>
+                    </div>
+                </div>
+
+                <!-- PREGUNTA 3 -->
+                <div class="paso-pregunta" id="paso-3">
+                    <p class="titulo-pregunta">3. ¿Qué temperatura va mejor con tu mood?</p>
+                    <div class="grid-opciones">
+                        <button class="btn-opcion" onclick="responder(3, 'caliente')">🔥 Caliente / Reconfortante</button>
+                        <button class="btn-opcion" onclick="responder(3, 'frio')">❄️ Frío / Con hielo / Granizado</button>
+                        <button class="btn-opcion" onclick="responder(3, 'cualquiera')">✨ Me da igual, sorpréndeme</button>
+                    </div>
+                </div>
+
+                <!-- RESULTADO TOP 3 -->
+                <div id="resultado-ia">
+                    <div class="encabezado-resultados">
+                        <h3>✨ Mis 3 mejores recomendaciones para ti, choom</h3>
+                        <p>Calculé tu compatibilidad con todo el menú. Elige los que quieras para tu orden:</p>
+                    </div>
+
+                    <div class="grid-top3" id="contenedor-top3"></div>
+
+                    <div class="acciones-finales">
+                        <a href="/ordenar" class="btn-accion btn-ir-carrito">🛒 Ir a finalizar pedido</a>
+                        <button class="btn-accion btn-reintentar" onclick="reiniciarTest()">🔄 Probar otra combinación</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuCompleto = [
+            { nombre: "Pastel de chocolate", precio: 90, img: "/static/pa.jpg", desc: "Suave y esponjoso pastel elaborado con chocolate de alta calidad.", tipo: "platillo", sabor: "dulce", temp: "cualquiera", momentos: ["comida", "cena"] },
+            { nombre: "Baguette", precio: 75, img: "/static/ba.jpg", desc: "Pan crujiente relleno de ingredientes frescos.", tipo: "platillo", sabor: "salado", temp: "cualquiera", momentos: ["desayuno", "comida", "cena"] },
+            { nombre: "Croissant de Jamón y Queso", precio: 105, img: "/static/croissant.jpg", desc: "Pan hojaldrado con mantequilla, relleno de jamón de pavo y queso gouda derretido.", tipo: "platillo", sabor: "salado", temp: "caliente", momentos: ["desayuno", "cena"] },
+            { nombre: "Panini de Pollo al Pesto", precio: 130, img: "/static/panini.jpg", desc: "Pechuga de pollo a la plancha, queso mozzarella, jitomate deshidratado y pesto.", tipo: "platillo", sabor: "salado", temp: "caliente", momentos: ["comida", "cena"] },
+            { nombre: "Bagel de Salmón", precio: 145, img: "/static/bagel.jpg", desc: "Bagel de ajonjolí con queso crema a las finas hierbas, salmón ahumado y pepino.", tipo: "platillo", sabor: "fresco", temp: "frio", momentos: ["desayuno", "comida"] },
+            { nombre: "Club Sandwich Clásico", precio: 155, img: "/static/club.jpg", desc: "Tres capas con pavo, tocino crujiente, queso americano, lechuga, jitomate y papas.", tipo: "platillo", sabor: "salado", temp: "caliente", momentos: ["comida"] },
+            { nombre: "Toast de Aguacate", precio: 120, img: "/static/toast.jpg", desc: "Pan de masa madre, puré de aguacate, pepitas, chile en hojuelas y dos huevos pochados.", tipo: "platillo", sabor: "fresco", temp: "cualquiera", momentos: ["desayuno"] },
+            { nombre: "Chilaquiles con Pollo", precio: 135, img: "/static/chilaquiles.jpg", desc: "Totopos bañados en salsa verde o roja, pollo deshebrado, crema y queso fresco.", tipo: "platillo", sabor: "salado", temp: "caliente", momentos: ["desayuno", "comida"] },
+            { nombre: "Ensalada César con Pollo", precio: 140, img: "/static/ensalada.jpg", desc: "Lechuga romana, tiras de pollo a la parrilla, crotones de ajo y aderezo César.", tipo: "platillo", sabor: "fresco", temp: "frio", momentos: ["comida", "cena"] },
+            { nombre: "Waffles con Frutos Rojos", precio: 110, img: "/static/waffle.jpg", desc: "Waffle dorado servido con fresas, zarzamoras y miel.", tipo: "platillo", sabor: "dulce", temp: "caliente", momentos: ["desayuno", "cena"] },
+            
+            { nombre: "Café Espresso", precio: 50, img: "/static/exp.jpg", desc: "Café intenso y aromático preparado con granos seleccionados.", tipo: "bebida", sabor: "cafe_especias", temp: "caliente", momentos: ["desayuno", "comida"] },
+            { nombre: "Capuchino clásico", precio: 45, img: "/static/capu.jpg", desc: "Combinación de espresso, leche vaporizada y espuma cremosa.", tipo: "bebida", sabor: "cafe_especias", temp: "caliente", momentos: ["desayuno", "cena"] },
+            { nombre: "Chocomilk", precio: 35, img: "/static/choco.jpg", desc: "Bebida dulce elaborada con leche y chocolate.", tipo: "bebida", sabor: "dulce", temp: "frio", momentos: ["desayuno", "cena"] },
+            { nombre: "Latte de Vainilla o Caramelo", precio: 75, img: "/static/latte.jpg", desc: "Espresso con leche caliente vaporizada y jarabe suave de vainilla o caramelo.", tipo: "bebida", sabor: "dulce", temp: "caliente", momentos: ["desayuno", "comida", "cena"] },
+            { nombre: "Chai Tea Latte", precio: 75, img: "/static/chai.jpg", desc: "Té negro concentrado con canela, cardamomo, jengibre y leche.", tipo: "bebida", sabor: "cafe_especias", temp: "caliente", momentos: ["comida", "cena"] },
+            { nombre: "Iced Caramel Macchiato", precio: 80, img: "/static/iced.jpg", desc: "Leche fría con hielo, vainilla, shot de espresso y espiral de caramelo.", tipo: "bebida", sabor: "cafe_especias", temp: "frio", momentos: ["comida"] },
+            { nombre: "Matcha Latte Helado", precio: 80, img: "/static/matcha.jpg", desc: "Té matcha ceremonial batido con leche, hielo y endulzante natural.", tipo: "bebida", sabor: "fresco", temp: "frio", momentos: ["desayuno", "comida"] },
+            { nombre: "Frappuccino Moka", precio: 85, img: "/static/frappe.jpg", desc: "Bebida helada tipo granizado con espresso, leche, chocolate y crema batida.", tipo: "bebida", sabor: "dulce", temp: "frio", momentos: ["comida"] },
+            { nombre: "Smoothie de Frutos Rojos", precio: 80, img: "/static/smoothie.jpg", desc: "Licuado denso de fresas, moras y arándanos congelados con yogur griego.", tipo: "bebida", sabor: "dulce", temp: "frio", momentos: ["desayuno", "comida"] },
+            { nombre: "Tisana Frutal Fría", precio: 60, img: "/static/tisana.jpg", desc: "Infusión refrescante de frutos del bosque y jamaica con hielo.", tipo: "bebida", sabor: "fresco", temp: "frio", momentos: ["comida", "cena"] }
+        ];
+
+        let momentoActual = "desayuno";
+        let respuestas = { tipo: "", sabor: "", temp: "" };
+        let top3Ganadores = [];
+        let cantidadesTop3 = [1, 1, 1];
+
+        function verificarHorarioOperativo() {
+            const ahora = new Date();
+            const dia = ahora.getDay();
+            const hora = ahora.getHours();
+            const minutos = ahora.getMinutes();
+            const tiempoActualMinutos = hora * 60 + minutos;
+
+            let abierto = false;
+            let mensajeHorario = "";
+
+            if (dia >= 1 && dia <= 5) {
+                abierto = (tiempoActualMinutos >= 420 && tiempoActualMinutos < 1260);
+                mensajeHorario = "Lunes a Viernes de 7:00 a.m. a 9:00 p.m.";
+            } else if (dia === 6) {
+                abierto = (tiempoActualMinutos >= 480 && tiempoActualMinutos < 1320);
+                mensajeHorario = "Sábados de 8:00 a.m. a 10:00 p.m.";
+            } else {
+                abierto = (tiempoActualMinutos >= 480 && tiempoActualMinutos < 1260);
+                mensajeHorario = "Domingos de 8:00 a.m. a 9:00 p.m.";
+            }
+
+            if (!abierto) {
+                document.getElementById("contenedor-cuestionario").style.display = "none";
+                document.getElementById("alerta-cerrado").style.display = "block";
+                document.getElementById("texto-horario-cerrado").innerHTML = `Don Barista está descansando. Nuestro horario para hoy es:<br><b>${mensajeHorario}</b>. ¡Te esperamos en nuestro próximo horario!`;
+                document.getElementById("badge-momento").innerText = "🔒 Fuera de horario";
+                return false;
+            }
+
+            detectarMomentoAutomatico(dia, hora);
+            buscarTodasLasPromocionesParaIA();
+            return true;
+        }
+
+        function buscarTodasLasPromocionesParaIA() {
+            fetch("/api/promociones")
+                .then(res => res.json())
+                .then(promosServidor => {
+                    let promosLocales = JSON.parse(localStorage.getItem("promosAroma") || "[]");
+                    let todas = [...promosServidor, ...promosLocales];
+                    
+                    const hoy = new Date().toISOString().split('T')[0];
+                    let activas = todas.filter(p => hoy >= p.fechaInicio && hoy <= p.fechaFin);
+
+                    if (activas.length > 0) {
+                        let listaHTML = "";
+                        activas.forEach(p => {
+                            listaHTML += `<li style="margin-bottom: 10px;">------ <b>${p.titulo}</b> (${p.etiqueta}) ------<br>$${Number(p.precio).toFixed(2)} MXN</li>`;
+                        });
+                        document.getElementById("listaPromosIA").innerHTML = listaHTML;
+                        document.getElementById("burbujaPromoIA").style.display = "block";
+                    }
+                })
+                .catch(() => {
+                    let promosLocales = JSON.parse(localStorage.getItem("promosAroma") || "[]");
+                    const hoy = new Date().toISOString().split('T')[0];
+                    let activas = promosLocales.filter(p => hoy >= p.fechaInicio && hoy <= p.fechaFin);
+                    if (activas.length > 0) {
+                        let listaHTML = "";
+                        activas.forEach(p => {
+                            listaHTML += `<li style="margin-bottom: 10px;">------ <b>${p.titulo}</b> (${p.etiqueta}) ------<br>$${Number(p.precio).toFixed(2)} MXN</li>`;
+                        });
+                        document.getElementById("listaPromosIA").innerHTML = listaHTML;
+                        document.getElementById("burbujaPromoIA").style.display = "block";
+                    }
+                });
+        }
+
+        function detectarMomentoAutomatico(dia, hora) {
+            let momentoDetectado = "desayuno";
+
+            if (dia >= 1 && dia <= 5) {
+                if (hora >= 7 && hora < 12) momentoDetectado = "desayuno";
+                else if (hora >= 12 && hora < 17) momentoDetectado = "comida";
+                else momentoDetectado = "cena";
+            } else {
+                if (hora >= 8 && hora < 12) momentoDetectado = "desayuno";
+                else if (hora >= 12 && hora < 17) momentoDetectado = "comida";
+                else momentoDetectado = "cena";
+            }
+
+            fijarMomento(momentoDetectado);
+        }
+
+        function fijarMomento(momento) {
+            momentoActual = momento;
+            const badge = document.getElementById("badge-momento");
+            const p1 = document.getElementById("texto-p1");
+            const contOpciones = document.getElementById("opciones-p1");
+
+            if (momento === "desayuno") {
+                badge.innerText = "🌅 Desayuno (7:00 a.m. - 12:00 p.m.)";
+                p1.innerText = "1. Buenos días, choom. ¿Cómo quieres arrancar hoy?";
+                contOpciones.innerHTML = `
+                    <button class="btn-opcion" onclick="responder(1, 'platillo')">🍳 Con un desayuno completo para agarrar energía</button>
+                    <button class="btn-opcion" onclick="responder(1, 'bebida')">☕ Solo necesito mi dosis de cafeína o bebida matutina</button>
+                `;
+            } else if (momento === "comida") {
+                badge.innerText = "☀️ Comida / Tarde (12:00 p.m. - 5:00 p.m.)";
+                p1.innerText = "1. ¡Hora de recargar baterías! ¿Qué buscas esta tarde?";
+                contOpciones.innerHTML = `
+                    <button class="btn-opcion" onclick="responder(1, 'platillo')">🥪 Un platillo sustancioso o snack salado</button>
+                    <button class="btn-opcion" onclick="responder(1, 'bebida')">🧋 Algo líquido y refrescante para seguir el día</button>
+                `;
+            } else {
+                badge.innerText = "🌙 Cena / Antojo (5:00 p.m. en adelante)";
+                p1.innerText = "1. Ya cayó la noche, choom. ¿Qué se te antoja para cerrar el día?";
+                contOpciones.innerHTML = `
+                    <button class="btn-opcion" onclick="responder(1, 'platillo')">🍰 Un postre o cena ligera antes de dormir</button>
+                    <button class="btn-opcion" onclick="responder(1, 'bebida')">🍵 Una bebida reconfortante o ligera</button>
+                `;
+            }
+        }
+
+        function responder(paso, valor) {
+            if (paso === 1) {
+                respuestas.tipo = valor;
+                document.getElementById("paso-1").classList.remove("activo");
+                document.getElementById("paso-2").classList.add("activo");
+            } else if (paso === 2) {
+                respuestas.sabor = valor;
+                document.getElementById("paso-2").classList.remove("activo");
+                document.getElementById("paso-3").classList.add("activo");
+            } else if (paso === 3) {
+                respuestas.temp = valor;
+                document.getElementById("paso-3").classList.remove("activo");
+                calcularRecomendaciones();
+            }
+        }
+
+        function calcularRecomendaciones() {
+            let evaluados = menuCompleto.map(prod => {
+                let puntos = 0;
+                if (prod.tipo === respuestas.tipo) puntos += 35;
+                if (prod.momentos.includes(momentoActual)) puntos += 20;
+                if (prod.sabor === respuestas.sabor) puntos += 25;
+                if (respuestas.temp === "cualquiera" || prod.temp === respuestas.temp || prod.temp === "cualquiera") puntos += 10;
+                puntos += Math.floor(Math.random() * 22);
+                return { ...prod, puntaje: puntos };
+            });
+
+            evaluados.sort((a, b) => b.puntaje - a.puntaje);
+
+            top3Ganadores = evaluados.slice(0, 3);
+            cantidadesTop3 = [1, 1, 1];
+
+            const porcentajes = [
+                Math.floor(Math.random() * (98 - 89 + 1)) + 89,
+                Math.floor(Math.random() * (84 - 72 + 1)) + 72,
+                Math.floor(Math.random() * (68 - 55 + 1)) + 55
+            ];
+
+            const etiquetasBadge = [
+                { texto: `🥇 ${porcentajes[0]}% Ideal para ti`, clase: "bg-alto" },
+                { texto: `🥈 ${porcentajes[1]}% Gran opción`, clase: "bg-medio" },
+                { texto: `🥉 ${porcentajes[2]}% Alternativa rica`, clase: "bg-alternativa" }
+            ];
+
+            const contenedor = document.getElementById("contenedor-top3");
+            contenedor.innerHTML = "";
+
+            top3Ganadores.forEach((prod, idx) => {
+                const esTop1 = idx === 0 ? "top-1" : "";
+                contenedor.innerHTML += `
+                    <div class="card-recomendacion ${esTop1}">
+                        <div>
+                            <span class="badge-porcentaje ${etiquetasBadge[idx].clase}">${etiquetasBadge[idx].texto}</span>
+                            <img src="${prod.img}" alt="${prod.nombre}" class="img-recomendada">
+                            <h4 class="nombre-prod">------ ${prod.nombre} ------</h4>
+                            <div class="precio-prod" id="precio-card-${idx}">$${prod.precio} MXN</div>
+                        </div>
+                        <p class="desc-prod">${prod.desc}</p>
+                        <div>
+                            <div class="control-cantidad">
+                                <button class="btn-cant" onclick="cambiarCantidadCard(${idx}, -1)">-</button>
+                                <span class="num-cant" id="cant-card-${idx}">1</span>
+                                <button class="btn-cant" onclick="cambiarCantidadCard(${idx}, 1)">+</button>
+                            </div>
+                            <button class="btn-agregar-card" id="btn-card-${idx}" onclick="agregarCardCarrito(${idx})">🛒 Agregar</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById("resultado-ia").style.display = "block";
+        }
+
+        function cambiarCantidadCard(idx, delta) {
+            let nuevaCant = cantidadesTop3[idx] + delta;
+            if (nuevaCant < 1) nuevaCant = 1;
+            if (nuevaCant > 20) nuevaCant = 20;
+            cantidadesTop3[idx] = nuevaCant;
+
+            document.getElementById(`cant-card-${idx}`).innerText = nuevaCant;
+            const prod = top3Ganadores[idx];
+            const total = prod.precio * nuevaCant;
+            document.getElementById(`precio-card-${idx}`).innerText = nuevaCant > 1 
+                ? `$${total} MXN ($${prod.precio} c/u)` 
+                : `$${prod.precio} MXN`;
+        }
+
+        function agregarCardCarrito(idx) {
+            const prod = top3Ganadores[idx];
+            const cant = cantidadesTop3[idx];
+            if (!prod) return;
+
+            let carrito = JSON.parse(localStorage.getItem('carritoAroma')) || {};
+            let totalActual = Object.values(carrito).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+
+            if (totalActual + cant > 20) {
+                alert(`⚠️ El límite máximo es de 20 artículos en tu carrito (ya tienes ${totalActual}).`);
+                return;
+            }
+
+            carrito[prod.nombre] = (carrito[prod.nombre] || 0) + cant;
+            localStorage.setItem('carritoAroma', JSON.stringify(carrito));
+
+            const btn = document.getElementById(`btn-card-${idx}`);
+            btn.innerText = `✓ ¡${cant} agregado(s)!`;
+            btn.style.background = "#4CAF50";
+            setTimeout(() => {
+                btn.innerText = "🛒 Agregar más";
+                btn.style.background = "#c08a54";
+            }, 1400);
+        }
+
+        function reiniciarTest() {
+            document.getElementById("resultado-ia").style.display = "none";
+            document.getElementById("paso-1").classList.add("activo");
+        }
+
+        window.addEventListener("DOMContentLoaded", verificarHorarioOperativo);
+    </script>
+</body>
+</html>

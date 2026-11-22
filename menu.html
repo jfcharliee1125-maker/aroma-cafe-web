@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Menú</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 16px; border-radius: 25px; transition: 0.3s; font-weight: 500; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; display: inline-flex; align-items: center; gap: 6px; }
+        .badge-carrito { background-color: #38251e; color: #e8c99b; padding: 2px 8px; border-radius: 12px; font-size: 13px; font-weight: bold; display: none; }
+
+        .banner-estado {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 2px solid #f5c6cb;
+            display: none;
+            font-size: 15px;
+        }
+
+        /* --- ESTILOS DE LA SECCIÓN DE BANNERS DINÁMICOS DE PROMOCIONES --- */
+        .contenedor-banners-promo {
+            max-width: 1150px;
+            margin: 30px auto 10px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 0 20px;
+        }
+        .tarjeta-promo-dinamica {
+            border-radius: 18px;
+            padding: 22px;
+            text-align: center;
+            color: #fff8ed;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .promo-badge-tag {
+            background-color: #e67e22; color: white; font-weight: 900; font-size: 11px;
+            padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 10px;
+            letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .promo-imagenes-flex {
+            display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px;
+        }
+        .promo-img-redonda {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            border: 3px solid #e8c99b; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: block;
+        }
+        .promo-titulo-card {
+            font-family: Georgia, serif; font-size: 19px; font-weight: 900;
+            line-height: 1.15; margin-bottom: 6px; text-transform: uppercase; color: #ffebd2;
+        }
+        .promo-sub-card { font-size: 13px; color: #e8c99b; margin-bottom: 12px; }
+        .promo-precio-pill {
+            background: #fff8ed; color: #38251e; font-weight: 900; font-size: 17px;
+            padding: 5px 16px; border-radius: 25px; display: inline-block; margin-bottom: 12px;
+        }
+        .btn-aprovechar-promo {
+            background: #c08a54; color: white; border: none; width: 100%; padding: 10px;
+            border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-aprovechar-promo:hover { background: #98653b; transform: scale(1.02); }
+
+        .productos { background-color: #f0e1cc; padding: 50px 8%; min-height: 80vh; }
+        .encabezado { text-align: center; margin-bottom: 40px; }
+        .etiqueta { color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 13px; }
+        .encabezado h2 { font-size: 38px; color: #4b3024; margin: 12px 0; }
+        .encabezado p { color: #806653; font-size: 17px; line-height: 1.7; }
+
+        .categoria-desplegable {
+            max-width: 1150px;
+            margin: 0 auto 30px auto;
+            background: #fffaf2;
+            border: 1px solid #e7d4ba;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(103, 69, 43, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .categoria-desplegable summary {
+            font-size: 22px;
+            color: #4b3024;
+            padding: 22px 30px;
+            background-color: #eddac2;
+            cursor: pointer;
+            font-weight: bold;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .categoria-desplegable summary:hover { background-color: #e2ccaebc; }
+        .categoria-desplegable summary::-webkit-details-marker { display: none; }
+        .categoria-desplegable summary::after { content: '▼'; font-size: 16px; color: #c08a54; transition: transform 0.3s; }
+        .categoria-desplegable[open] summary::after { transform: rotate(180deg); }
+
+        .tarjetas { 
+            padding: 30px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .tarjeta { 
+            background: #ffffff; 
+            border-radius: 18px; 
+            padding: 25px; 
+            text-align: center; 
+            border: 1px solid #e7d4ba; 
+            transition: 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        
+        .tarjeta:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 12px 25px rgba(103, 69, 43, 0.12); 
+        }
+
+        .tarjeta img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            margin: 15px 0; 
+        }
+
+        .tarjeta h3 { color: #593724; font-size: 21px; margin-bottom: 8px; }
+        .tarjeta p { color: #806653; font-size: 15px; line-height: 1.7; }
+        .precio { font-size: 20px; font-weight: bold; color: #a76b3f; margin: 12px 0; }
+
+        .controles-compra {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .input-cantidad-menu {
+            width: 60px;
+            padding: 8px;
+            text-align: center;
+            border: 2px solid #e7d4ba;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #3e2723;
+            outline: none;
+            background-color: #fffdf9;
+        }
+        .input-cantidad-menu:focus { border-color: #c08a54; }
+
+        .btn-agregar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 15px;
+            background-color: #c08a54;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .btn-agregar:hover { background-color: #98653b; transform: scale(1.02); }
+        .btn-agregado { background-color: #4CAF50 !important; color: white !important; }
+        .btn-deshabilitado { background-color: #cccccc !important; color: #666666 !important; cursor: not-allowed !important; transform: none !important; }
+
+        footer { background-color: #38251e; text-align: center; padding: 25px 15px; color: #e8c99b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="/">Inicio</a>
+            <a href="/nosotros">Nosotros</a>
+            <a href="/menu" class="activo">Menú</a>
+            <a href="/galeria">Galería</a>
+            <a href="/servicios">Servicios</a>
+            <a href="/contacto">Contacto</a>
+            <a href="/ordenar" class="btn-ordenar-nav">🛒 Carrito <span id="contadorCarrito" class="badge-carrito">0</span></a>
+        </div>
+    </nav>
+
+    <!-- BANNER DE ESTADO DE APERTURA -->
+    <div id="bannerEstado" class="banner-estado">
+        🔴 Cafetería Cerrada en este momento. Los pedidos se encuentran temporalmente deshabilitados.
+    </div>
+
+    <!-- CONTENEDOR DE BANNERS DE PROMOCIONES DINÁMICAS -->
+    <div id="contenedorBannersDinamicos" class="contenedor-banners-promo"></div>
+
+    <section class="productos">
+        <div class="encabezado">
+            <span class="etiqueta">Preparados para ti</span>
+            <h2>Nuestro Menú</h2>
+            <p>Explora nuestras categorías, elige tus especialidades y agrégalas al carrito (Máximo 20 artículos en total).</p>
+        </div>
+
+        <!-- CATEGORÍA 1: PLATILLOS (Cerrado por defecto) -->
+        <details class="categoria-desplegable">
+            <summary>🍽️ Platillos</summary>
+            <div class="tarjetas">
+                <div class="tarjeta">
+                    <div>
+                        <h3>Pastel de chocolate</h3>
+                        <img src="{{ url_for('static', filename='pa.jpg') }}" alt="Pastel de chocolate">
+                        <p><b>Descripción:</b> Suave y esponjoso pastel elaborado con chocolate de alta calidad.</p>
+                        <div class="precio">$90 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Pastel de chocolate" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Pastel de chocolate', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Baguette</h3>
+                        <img src="{{ url_for('static', filename='ba.jpg') }}" alt="Baguette">
+                        <p><b>Descripción:</b> Pan crujiente relleno de ingredientes frescos.</p>
+                        <div class="precio">$75 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Baguette" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Baguette', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Croissant de Jamón y Queso</h3>
+                        <img src="{{ url_for('static', filename='croissant.jpg') }}" alt="Croissant de Jamón y Queso">
+                        <p><b>Descripción:</b> Pan hojaldrado con mantequilla, relleno de jamón de pavo y queso gouda derretido.</p>
+                        <div class="precio">$105 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Croissant de Jamón y Queso" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Croissant de Jamón y Queso', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Panini de Pollo al Pesto</h3>
+                        <img src="{{ url_for('static', filename='panini.jpg') }}" alt="Panini de Pollo al Pesto">
+                        <p><b>Descripción:</b> Pechuga de pollo a la plancha, queso mozzarella, jitomate deshidratado y pesto en ciabatta.</p>
+                        <div class="precio">$130 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Panini de Pollo al Pesto" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Panini de Pollo al Pesto', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Bagel de Salmón</h3>
+                        <img src="{{ url_for('static', filename='bagel.jpg') }}" alt="Bagel de Salmón">
+                        <p><b>Descripción:</b> Bagel de ajonjolí con queso crema a las finas hierbas, salmón ahumado y pepino.</p>
+                        <div class="precio">$145 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Bagel de Salmón" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Bagel de Salmón', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Club Sandwich Clásico</h3>
+                        <img src="{{ url_for('static', filename='club.jpg') }}" alt="Club Sandwich Clásico">
+                        <p><b>Descripción:</b> Tres capas con pavo, tocino crujiente, queso americano, lechuga, jitomate y papas.</p>
+                        <div class="precio">$155 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Club Sandwich Clásico" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Club Sandwich Clásico', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Toast de Aguacate</h3>
+                        <img src="{{ url_for('static', filename='toast.jpg') }}" alt="Toast de Aguacate">
+                        <p><b>Descripción:</b> Pan de masa madre, puré de aguacate, pepitas, chile en hojuelas y dos huevos pochados.</p>
+                        <div class="precio">$120 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Toast de Aguacate" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Toast de Aguacate', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Chilaquiles con Pollo</h3>
+                        <img src="{{ url_for('static', filename='chilaquiles.jpg') }}" alt="Chilaquiles con Pollo">
+                        <p><b>Descripción:</b> Totopos bañados en salsa verde o roja, pollo deshebrado, crema y queso fresco.</p>
+                        <div class="precio">$135 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Chilaquiles con Pollo" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Chilaquiles con Pollo', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Ensalada César con Pollo</h3>
+                        <img src="{{ url_for('static', filename='ensalada.jpg') }}" alt="Ensalada César con Pollo">
+                        <p><b>Descripción:</b> Lechuga romana, tiras de pollo a la parrilla, crotones de ajo y aderezo César cremoso.</p>
+                        <div class="precio">$140 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Ensalada César con Pollo" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Ensalada César con Pollo', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Waffles con Frutos Rojos</h3>
+                        <img src="{{ url_for('static', filename='waffle.jpg') }}" alt="Waffles con Frutos Rojos">
+                        <p><b>Descripción:</b> Waffle dorado por fuera y suave por dentro, servido con fresas, zarzamoras y miel.</p>
+                        <div class="precio">$110 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Waffles con Frutos Rojos" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Waffles con Frutos Rojos', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </details>
+
+        <!-- CATEGORÍA 2: BEBIDAS (Cerrado por defecto) -->
+        <details class="categoria-desplegable">
+            <summary>☕ Bebidas</summary>
+            <div class="tarjetas">
+                <div class="tarjeta">
+                    <div>
+                        <h3>Café Espresso</h3>
+                        <img src="{{ url_for('static', filename='exp.jpg') }}" alt="Café Espresso">
+                        <p><b>Descripción:</b> Café intenso y aromático preparado con granos seleccionados.</p>
+                        <div class="precio">$50 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Café Espresso" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Café Espresso', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Capuchino clásico</h3>
+                        <img src="{{ url_for('static', filename='capu.jpg') }}" alt="Capuchino clásico">
+                        <p><b>Descripción:</b> Deliciosa combinación de espresso, leche vaporizada y espuma cremosa.</p>
+                        <div class="precio">$45 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Capuchino clásico" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Capuchino clásico', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Chocomilk</h3>
+                        <img src="{{ url_for('static', filename='choco.jpg') }}" alt="Chocomilk">
+                        <p><b>Descripción:</b> Bebida dulce y refrescante elaborada con leche y chocolate.</p>
+                        <div class="precio">$35 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Chocomilk" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Chocomilk', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Latte de Vainilla o Caramelo</h3>
+                        <img src="{{ url_for('static', filename='latte.jpg') }}" alt="Latte de Vainilla o Caramelo">
+                        <p><b>Descripción:</b> Espresso combinado con leche caliente vaporizada y jarabe suave de vainilla o caramelo.</p>
+                        <div class="precio">$75 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Latte de Vainilla o Caramelo" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Latte de Vainilla o Caramelo', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Chai Tea Latte</h3>
+                        <img src="{{ url_for('static', filename='chai.jpg') }}" alt="Chai Tea Latte">
+                        <p><b>Descripción:</b> Té negro concentrado con especias aromáticas (canela, cardamomo, jengibre) y leche.</p>
+                        <div class="precio">$75 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Chai Tea Latte" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Chai Tea Latte', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Iced Caramel Macchiato</h3>
+                        <img src="{{ url_for('static', filename='iced.jpg') }}" alt="Iced Caramel Macchiato">
+                        <p><b>Descripción:</b> Leche fría con hielo, vainilla, coronada con shot de espresso y espiral de caramelo.</p>
+                        <div class="precio">$80 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Iced Caramel Macchiato" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Iced Caramel Macchiato', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Matcha Latte Helado</h3>
+                        <img src="{{ url_for('static', filename='matcha.jpg') }}" alt="Matcha Latte Helado">
+                        <p><b>Descripción:</b> Té matcha ceremonial batido con leche de tu elección, hielo y endulzante natural.</p>
+                        <div class="precio">$80 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Matcha Latte Helado" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Matcha Latte Helado', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Frappuccino Moka</h3>
+                        <img src="{{ url_for('static', filename='frappe.jpg') }}" alt="Frappuccino Moka">
+                        <p><b>Descripción:</b> Bebida helada a punto de granizado con espresso, leche, chocolate, hielo y crema batida.</p>
+                        <div class="precio">$85 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Frappuccino Moka" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Frappuccino Moka', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Smoothie de Frutos Rojos</h3>
+                        <img src="{{ url_for('static', filename='smoothie.jpg') }}" alt="Smoothie de Frutos Rojos">
+                        <p><b>Descripción:</b> Licuado denso de fresas, moras y arándanos congelados mezclados con yogur griego.</p>
+                        <div class="precio">$80 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Smoothie de Frutos Rojos" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Smoothie de Frutos Rojos', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+
+                <div class="tarjeta">
+                    <div>
+                        <h3>Tisana Frutal Fría</h3>
+                        <img src="{{ url_for('static', filename='tisana.jpg') }}" alt="Tisana Frutal Fría">
+                        <p><b>Descripción:</b> Infusión refrescante de frutas deshidratadas (frutos del bosque y jamaica) con hielo.</p>
+                        <div class="precio">$60 MXN</div>
+                    </div>
+                    <div class="controles-compra">
+                        <input type="number" id="cant-Tisana Frutal Fría" class="input-cantidad-menu" min="1" max="20" value="1" onchange="validarLimite(this)">
+                        <button type="button" class="btn-agregar" onclick="agregarAlCarrito('Tisana Frutal Fría', this)">🛒 Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <script>
+        function verificarHorarioApertura() {
+            let ahora = new Date();
+            let dia = ahora.getDay();
+            let hora = ahora.getHours();
+            let minutos = ahora.getMinutes();
+            let horaDecimal = hora + minutos / 60;
+            let abierto = false;
+
+            if (dia >= 1 && dia <= 5) {
+                if (horaDecimal >= 7 && horaDecimal < 21) abierto = true;
+            } else if (dia === 6) {
+                if (horaDecimal >= 8 && horaDecimal < 22) abierto = true;
+            } else if (dia === 0) {
+                if (horaDecimal >= 8 && horaDecimal < 21) abierto = true;
+            }
+
+            if (!abierto) {
+                let banner = document.getElementById('bannerEstado');
+                if (banner) banner.style.display = 'block';
+
+                let botones = document.querySelectorAll('.btn-agregar, .btn-aprovechar-promo');
+                let inputs = document.querySelectorAll('.input-cantidad-menu');
+
+                botones.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('btn-deshabilitado');
+                    btn.innerText = "🔒 Cerrado";
+                });
+
+                inputs.forEach(input => { input.disabled = true; });
+            }
+        }
+
+        function obtenerCarrito() {
+            return JSON.parse(localStorage.getItem('carritoAroma')) || {};
+        }
+
+        function calcularTotalArticulos(carrito) {
+            return Object.values(carrito).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+        }
+
+        function actualizarBadgeCarrito() {
+            let carrito = obtenerCarrito();
+            let total = calcularTotalArticulos(carrito);
+            let badge = document.getElementById('contadorCarrito');
+            if (badge) {
+                if (total > 0) {
+                    badge.innerText = total;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.innerText = "0";
+                    badge.style.display = 'none';
+                }
+            }
+        }
+
+        function validarLimite(input) {
+            let valor = parseInt(input.value);
+            if (isNaN(valor) || valor < 1) {
+                input.value = 1;
+            } else if (valor > 20) {
+                input.value = 20;
+                alert("El límite máximo por producto es de 20 unidades.");
+            }
+        }
+
+        function agregarAlCarrito(nombreProducto, botonElemento) {
+            let inputCantidad = document.getElementById('cant-' + nombreProducto);
+            let cantidadSeleccionada = parseInt(inputCantidad ? inputCantidad.value : 1) || 1;
+
+            let carrito = obtenerCarrito();
+            let totalActual = calcularTotalArticulos(carrito);
+            let cantidadPreviaProducto = carrito[nombreProducto] || 0;
+
+            if (totalActual + cantidadSeleccionada > 20) {
+                alert("⚠️ Límite excedido: El máximo permitido es de 20 artículos en total por pedido. Actualmente tienes " + totalActual + " en tu carrito.");
+                return;
+            }
+            
+            carrito[nombreProducto] = cantidadPreviaProducto + cantidadSeleccionada;
+            if (carrito[nombreProducto] > 20) carrito[nombreProducto] = 20;
+
+            localStorage.setItem('carritoAroma', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+            
+            let textoOriginal = botonElemento.innerHTML;
+            botonElemento.innerHTML = "✓ Agregado";
+            botonElemento.classList.add("btn-agregado");
+            botonElemento.disabled = true;
+
+            setTimeout(() => {
+                botonElemento.innerHTML = textoOriginal;
+                botonElemento.classList.remove("btn-agregado");
+                botonElemento.disabled = false;
+            }, 1200);
+        }
+
+        // --- CARGAR PROMOCIONES DINÁMICAS (Servidor + Fallback Local) ---
+        function cargarPromocionesPublicas() {
+            fetch("/api/promociones")
+                .then(res => {
+                    if (!res.ok) throw new Error("Servidor no disponible");
+                    return res.json();
+                })
+                .then(promosServidor => {
+                    let promosLocales = JSON.parse(localStorage.getItem("promosAroma") || "[]");
+                    let todas = [...promosServidor, ...promosLocales];
+                    renderizarPromos(todas);
+                })
+                .catch(() => {
+                    let promosLocales = JSON.parse(localStorage.getItem("promosAroma") || "[]");
+                    renderizarPromos(promosLocales);
+                });
+        }
+
+        function renderizarPromos(promos) {
+            const contenedor = document.getElementById("contenedorBannersDinamicos");
+            contenedor.innerHTML = "";
+
+            if (!promos || promos.length === 0) return;
+
+            const hoy = new Date().toISOString().split('T')[0];
+            let promosActivas = promos.filter(p => hoy >= p.fechaInicio && hoy <= p.fechaFin);
+
+            if (promosActivas.length === 0) return;
+
+            promosActivas.forEach(p => {
+                let gradiente = "linear-gradient(135deg, #38251e, #6f4530)";
+                if (p.tema === "dorado") gradiente = "linear-gradient(135deg, #8e5a24, #c08a54)";
+                if (p.tema === "rojo") gradiente = "linear-gradient(135deg, #7b1e1e, #c0392b)";
+                if (p.tema === "verde") gradiente = "linear-gradient(135deg, #1e4d2b, #2e7d32)";
+
+                let img1 = p.item1 || p.bebida || p.imagen;
+                let img2 = p.item2 || p.alimento || p.imagen2;
+
+                let imagenesHTML = `<img src="/static/${img1}" class="promo-img-redonda" alt="Promo">`;
+                if (img2 && img2 !== "") {
+                    imagenesHTML = `
+                        <img src="/static/${img1}" class="promo-img-redonda" alt="Promo 1">
+                        <img src="/static/${img2}" class="promo-img-redonda" alt="Promo 2">
+                    `;
+                }
+
+                let card = document.createElement("div");
+                card.className = "tarjeta-promo-dinamica";
+                card.style.background = gradiente;
+                card.innerHTML = `
+                    <div>
+                        <span class="promo-badge-tag">${p.etiqueta}</span>
+                        <div class="promo-imagenes-flex">${imagenesHTML}</div>
+                        <div class="promo-titulo-card">${p.titulo}</div>
+                        <div class="promo-sub-card">${p.subtitulo}</div>
+                        <div class="promo-precio-pill">$${Number(p.precio).toFixed(2)} MXN</div>
+                    </div>
+                    <button type="button" class="btn-aprovechar-promo" onclick="agregarPromoAlCarrito('${p.titulo}', ${p.precio}, this)">🛒 Aprovechar Promo</button>
+                `;
+                contenedor.appendChild(card);
+            });
+
+            verificarHorarioApertura();
+        }
+
+        function agregarPromoAlCarrito(tituloPromo, precioPromo, botonElemento) {
+            let nombreItem = `⭐ PROMO: ${tituloPromo} ($${precioPromo.toFixed(2)})`;
+            let carrito = obtenerCarrito();
+            let totalActual = calcularTotalArticulos(carrito);
+
+            if (totalActual + 1 > 20) {
+                alert("⚠️ Límite excedido: El máximo permitido es de 20 artículos en total por pedido.");
+                return;
+            }
+
+            // Verificar estrictamente si ya existe CUALQUIER otra promoción en el carrito
+            let yaTienePromo = Object.keys(carrito).some(k => k.startsWith("⭐ PROMO:"));
+
+            if (yaTienePromo && !carrito.hasOwnProperty(nombreItem)) {
+                alert("⚠️ Solo se permite 1 promoción por pedido. Ya tienes una promoción agregada en tu carrito.");
+                return;
+            }
+
+            // Si ya la tiene agregada, no permitimos acumular más de 1 unidad de promo
+            if (carrito.hasOwnProperty(nombreItem)) {
+                alert("⚠️ Ya has agregado esta promoción al carrito.");
+                return;
+            }
+
+            // Agregar exactamente 1 unidad de la promoción
+            carrito[nombreItem] = 1;
+
+            localStorage.setItem('carritoAroma', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+
+            let textoOriginal = botonElemento.innerHTML;
+            botonElemento.innerHTML = "✓ ¡Promo Agregada!";
+            botonElemento.classList.add("btn-agregado");
+            botonElemento.disabled = true;
+
+            setTimeout(() => {
+                botonElemento.innerHTML = textoOriginal;
+                botonElemento.classList.remove("btn-agregado");
+                botonElemento.disabled = false;
+            }, 1200);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            actualizarBadgeCarrito();
+            verificarHorarioApertura();
+            cargarPromocionesPublicas();
+        });
+    </script>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+</body>
+</html>
