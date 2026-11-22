@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma & Café | Inicio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: #faf3e7; color: #3e2723; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        .menu { background-color: #38251e; display: flex; justify-content: space-between; align-items: center; padding: 18px 8%; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .logo { color: #e8c99b; font-size: 27px; font-weight: bold; letter-spacing: 1px; }
+        .menu-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .menu a { text-decoration: none; color: #fff8ed; padding: 10px 18px; border-radius: 25px; transition: all 0.3s ease; font-weight: 500; font-size: 15px; }
+        .menu a:hover, .menu a.activo { background-color: #c08a54; color: white; transform: translateY(-2px); }
+        .btn-ordenar-nav { background-color: #c08a54 !important; color: white !important; font-weight: bold !important; box-shadow: 0 4px 12px rgba(192,138,84,0.4); }
+        
+        .btn-login-nav {
+            background-color: transparent !important;
+            border: 2px solid #c08a54 !important;
+            color: #e8c99b !important;
+            font-weight: bold !important;
+        }
+        .btn-login-nav:hover {
+            background-color: #c08a54 !important;
+            color: white !important;
+        }
+
+        .portada { min-height: 85vh; padding: 60px 8%; display: flex; align-items: center; justify-content: space-between; gap: 50px; background: linear-gradient(135deg, #f7ebd9 0%, #ecd4b3 100%); position: relative; overflow: hidden; }
+        .portada-texto { max-width: 600px; z-index: 2; }
+        .etiqueta { display: inline-block; background-color: #f3dfc1; color: #98653b; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; font-size: 12px; padding: 6px 14px; border-radius: 20px; margin-bottom: 15px; border: 1px solid #e0c29f; }
+        .portada h1 { font-family: Georgia, serif; font-size: clamp(42px, 5.5vw, 68px); line-height: 1.1; margin: 15px 0 25px 0; color: #3b231a; }
+        .portada h1 span { color: #a76b3f; font-style: italic; }
+        .portada p { font-size: 18px; line-height: 1.8; color: #674a3b; margin-bottom: 35px; }
+        
+        .boton { display: inline-block; background-color: #6f4530; color: white; padding: 16px 32px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(111,69,48,0.25); font-size: 16px; }
+        .boton:hover { background-color: #a76b3f; transform: translateY(-4px); box-shadow: 0 10px 25px rgba(167,107,63,0.4); }
+
+        .portada img { width: 45%; max-width: 480px; height: 380px; object-fit: cover; border-radius: 30px; border: 8px solid #fff8ed; box-shadow: 0 20px 40px rgba(78,44,28,0.2); transition: transform 0.5s ease; }
+        .portada img:hover { transform: scale(1.02); }
+
+        .frase { text-align: center; padding: 90px 20px; background: linear-gradient(135deg, #422a20, #2f1d16); color: #fff3df; box-shadow: inset 0 10px 20px rgba(0,0,0,0.1); }
+        .frase h2 { font-family: Georgia, serif; font-style: italic; font-size: clamp(28px, 4vw, 42px); margin-bottom: 15px; letter-spacing: 0.5px; }
+        .frase p { color: #d4b58e; font-size: 17px; }
+
+        .seccion-comentarios { max-width: 800px; margin: 50px auto; padding: 30px; background: #fff8ed; border-radius: 15px; box-shadow: 0 10px 25px rgba(62,39,35,0.08); border: 1px solid #e8c99b; }
+        .seccion-comentarios h3, .seccion-comentarios h4 { color: #38251e; font-family: Georgia, serif; margin-bottom: 20px; }
+        
+        .caja-promedio-general { background: linear-gradient(135deg, #38251e, #593724); color: #fff8ed; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-around; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .promedio-numero { font-size: 38px; font-weight: bold; color: #e8c99b; font-family: Georgia, serif; }
+
+        .form-comentario-box { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .form-comentario-box select, .form-comentario-box textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d4b58e; background: #fff; font-family: inherit; color: #3e2723; }
+        .lista-opiniones { display: flex; flex-direction: column; gap: 15px; }
+        .tarjeta-opinion { background: white; padding: 18px; border-radius: 10px; border-left: 5px solid #c08a54; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
+
+        /* Estilos para el Popup / Modal de Promociones Nuevas */
+        #modalPromosInicio { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 3000; justify-content: center; align-items: center; padding: 20px; animation: fadeInModal 0.3s ease; }
+        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+        .contenido-modal-promos { background: #fffaf2; border: 3px solid #c08a54; padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(56,37,30,0.3); }
+        .contenido-modal-promos h3 { color: #4b3024; font-family: Georgia, serif; font-size: 24px; margin-bottom: 12px; }
+        .contenido-modal-promos p { color: #806653; font-size: 15px; margin-bottom: 20px; }
+        .lista-modal-promos { text-align: left; background: #f7ebd9; padding: 15px; border-radius: 12px; margin-bottom: 20px; max-height: 200px; overflow-y: auto; list-style: none; }
+        .lista-modal-promos li { margin-bottom: 8px; font-size: 14px; color: #3e2723; line-height: 1.4; }
+
+        /* Estilos para el Chat Bot Flotante con IA */
+        #chat-widget-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        #chat-btn {
+            background-color: #6f4530;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(111, 69, 48, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        #chat-btn:hover {
+            background-color: #a76b3f;
+            transform: translateY(-3px);
+        }
+        #chat-window {
+            display: none;
+            flex-direction: column;
+            width: 370px;
+            height: 480px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(56, 37, 30, 0.25);
+            overflow: hidden;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            border: 2px solid #c08a54;
+            animation: fadeInModal 0.2s ease;
+            transition: all 0.25s ease;
+        }
+        #chat-window.pantalla-completa {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            border-radius: 0;
+            border: none;
+            z-index: 10000;
+        }
+        #chat-header {
+            background-color: #38251e;
+            color: #fff8ed;
+            padding: 14px 16px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Georgia, serif;
+        }
+        #chat-subtitulo {
+            display: block;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11px;
+            font-weight: normal;
+            color: #e8c99b;
+            margin-top: 2px;
+        }
+        .chat-header-controles {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-ctrl-btn {
+            background: rgba(255, 248, 237, 0.12);
+            border: 1px solid rgba(232, 201, 155, 0.35);
+            color: #e8c99b;
+            font-size: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .chat-ctrl-btn:hover {
+            background: rgba(192, 138, 84, 0.35);
+            color: white;
+        }
+        #chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+            background: #fdfbf7;
+        }
+        .msg {
+            padding: 13px 15px;
+            border-radius: 14px;
+            max-width: 90%;
+            font-size: 14px;
+            line-height: 1.55;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            letter-spacing: 0.1px;
+        }
+        #chat-window.pantalla-completa .msg {
+            max-width: 780px;
+            font-size: 15px;
+        }
+        .msg.user {
+            background-color: #e2d1c3;
+            align-self: flex-end;
+            text-align: left;
+            color: #3e2723;
+            border-bottom-right-radius: 3px;
+        }
+        .msg.bot {
+            background-color: #f0e1cc;
+            align-self: flex-start;
+            text-align: left;
+            width: fit-content;
+            max-width: 90%;
+            white-space: pre-line;
+            color: #38251e;
+            border-bottom-left-radius: 3px;
+        }
+        .chat-prod-titulo {
+            display: block;
+            font-weight: bold;
+            color: #4b3024;
+            font-size: 14.5px;
+            margin-top: 12px;
+            letter-spacing: 0.3px;
+        }
+        .chat-prod-precio {
+            display: block;
+            font-weight: bold;
+            color: #a76b3f;
+            margin: 3px 0 5px 0;
+        }
+        .chat-seccion-titulo {
+            display: block;
+            font-weight: bold;
+            font-size: 15px;
+            color: #38251e;
+            background: #e6cfb3;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #6f4530;
+            margin: 18px 0 8px 0;
+        }
+        .chat-seccion-titulo:first-child {
+            margin-top: 2px;
+        }
+        .chat-img-galeria {
+            display: block;
+            width: 100%;
+            max-width: 240px;
+            height: 145px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 6px 0 14px 0;
+            border: 1.5px solid #c08a54;
+            box-shadow: 0 3px 10px rgba(56, 37, 30, 0.15);
+        }
+        #chat-sugerencias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #faf3e7;
+            border-top: 1px solid #ead5b7;
+            max-height: 82px;
+            overflow-y: auto;
+        }
+        .chat-chip-btn {
+            background: #fff8ed;
+            color: #3e2723;
+            border: 1px solid #c08a54;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .chat-chip-btn:hover {
+            background: #6f4530;
+            color: #fff8ed;
+        }
+        .msg.typing {
+            font-style: italic;
+            opacity: 0.85;
+        }
+        #chat-input-area {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid #e0c29f;
+            background: white;
+            gap: 8px;
+        }
+        #chat-window.pantalla-completa #chat-input-area {
+            padding: 16px 24px;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1px solid #d4b58e;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            color: #3e2723;
+        }
+        #chat-input:disabled {
+            background-color: #f7f2ea;
+            color: #998375;
+        }
+        #chat-send {
+            background-color: #6f4530;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        #chat-send:hover:not(:disabled) {
+            background-color: #a76b3f;
+        }
+        #chat-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        footer { background-color: #241712; text-align: center; padding: 30px 15px; color: #d4b58e; font-size: 14px; border-top: 1px solid #3d271f; }
+
+        @media (max-width: 850px) {
+            .portada { flex-direction: column-reverse; text-align: center; justify-content: center; min-height: auto; padding: 50px 5%; }
+            .portada img { width: 100%; max-width: 100%; height: 300px; }
+            .portada-texto { max-width: 100%; }
+            .caja-promedio-general { flex-direction: column; text-align: center; gap: 10px; }
+            #chat-window:not(.pantalla-completa) { width: calc(100vw - 30px); right: -10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="menu">
+        <div class="logo">☕ Aroma & Café</div>
+        <div class="menu-links">
+            <a href="/" class="activo">Inicio</a>
+            <a href="/nosotros">Nosotros</a>
+            <a href="/menu">Menú</a>
+            <a href="/galeria">Galería</a>
+            <a href="/servicios">Servicios</a>
+            <a href="/contacto">Contacto</a>
+            <a href="/ordenar" class="btn-ordenar-nav">🛒 Carrito</a>
+
+            <div style="position: relative; display: inline-block;">
+                <a href="#" id="btnSesionNav" onclick="manejarClickSesion(event)" class="btn-login-nav">👤 Iniciar Sesión</a>
+                
+                <div id="menuDesplegable" style="display: none; position: absolute; right: 0; top: 45px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 210px; z-index: 3000; overflow: hidden; text-align: left;">
+                    <div id="opcionesAdminContainer"></div>
+                    <a href="#" onclick="cerrarSesionCliente()" style="display: block; padding: 12px 15px; color: #3e2723; text-decoration: none; font-size: 14px; border-bottom: 1px solid #f0e1cc;">🚪 Cerrar Sesión</a>
+                    <a href="#" onclick="cambiarCuenta()" style="display: block; padding: 12px 15px; color: #c08a54; text-decoration: none; font-size: 14px; font-weight: bold;">🔄 Cambiar de cuenta</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MODAL / POPUP DE NUEVAS PROMOCIONES AL ENTRAR -->
+    <div id="modalPromosInicio">
+        <div class="contenido-modal-promos">
+            <span onclick="cerrarModalPromos()" style="position: absolute; top: 12px; right: 18px; cursor: pointer; font-size: 22px; color: #593724; font-weight: bold;">&times;</span>
+            <h3>🔥 ¡Tenemos Promociones Nuevas!</h3>
+            <p>Hola, choom. Entraste en el momento perfecto. Estas son las ofertas disponibles hoy en tienda:</p>
+            <ul id="ulPromosInicio" class="lista-modal-promos"></ul>
+            <a href="/menu" class="boton" style="width: 100%; text-align: center; padding: 12px; font-size: 14px;">Ir al Menú a Aprovecharlas</a>
+        </div>
+    </div>
+
+    <section class="portada">
+        <div class="portada-texto">
+            <span class="etiqueta">☕ Café artesanal de especialidad</span>
+            <h1>Cada taza,<br>un <span>momento especial.</span></h1>
+            <p>Descubre el aroma envolvente del café recién molido, sabores irresistibles y un santuario de paz perfecto para disfrutar, crear y compartir.</p>
+            <a href="/menu" class="boton">¡Haz tu pedido aquí! →</a>
+        </div>
+        <img src="{{ url_for('static', filename='c.jpg') }}" alt="Una deliciosa taza de café">
+    </section>
+
+    <section class="frase">
+        <h2>“La vida es demasiado corta para tomar mal café”.</h2>
+        <p>Tu pausa favorita comienza aquí. ☕</p>
+    </section>
+
+    <section class="seccion-comentarios">
+        <h3 style="text-align: center;">Comentarios y Calificaciones</h3>
+        
+        <div class="caja-promedio-general">
+            <div>
+                <h4 style="color: #e8c99b; margin-bottom: 5px; font-family: Georgia, serif;">Calificación Promedio</h4>
+                <p style="font-size: 14px; color: #d4b58e;" id="texto-total-opiniones">Calculando opiniones...</p>
+            </div>
+            <div style="text-align: center;">
+                <div class="promedio-numero" id="promedio-estrellas-num">5.0</div>
+                <div style="color: #e67e22; font-size: 18px;" id="estrellas-promedio-visual">⭐⭐⭐⭐⭐</div>
+            </div>
+        </div>
+
+        <form id="form-comentario" class="form-comentario-box">
+            <div>
+                <label for="calificacion" style="font-weight: bold; display: block; margin-bottom: 5px;">Calificación (1 a 5 estrellas):</label>
+                <select id="calificacion" required>
+                    <option value="5">⭐⭐⭐⭐⭐ (5 - Excelente)</option>
+                    <option value="4">⭐⭐⭐⭐ (4 - Muy bueno)</option>
+                    <option value="3">⭐⭐⭐ (3 - Bueno)</option>
+                    <option value="2">⭐⭐ (2 - Regular)</option>
+                    <option value="1">⭐ (1 - Malo)</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="texto-comentario" style="font-weight: bold; display: block; margin-bottom: 5px;">Tu comentario:</label>
+                <textarea id="texto-comentario" placeholder="Escribe tu opinión sobre el café o el servicio..." required rows="3"></textarea>
+            </div>
+            
+            <button type="submit" class="boton" style="width: 100%; text-align: center; background-color: #38251e;">Enviar Comentario</button>
+        </form>
+
+        <hr style="border: 0; border-top: 1px solid #d4b58e; margin: 30px 0;">
+
+        <h4>Opiniones recientes de nuestros clientes</h4>
+        <div id="lista-opiniones" class="lista-opiniones">
+        </div>
+    </section>
+
+    <!-- WIDGET DE CHAT FLOTANTE CON IA (GEMINI) -->
+    <div id="chat-widget-container">
+        <button id="chat-btn" onclick="toggleChat()">
+            🤖 Asistente IA
+        </button>
+
+        <div id="chat-window">
+            <div id="chat-header">
+                <div>
+                    <span>Aroma & Café - Asistente</span>
+                    <span id="chat-subtitulo">En línea · Menú y promos</span>
+                </div>
+                <div class="chat-header-controles">
+                    <button class="chat-ctrl-btn" id="chat-expand" title="Pantalla completa" onclick="togglePantallaCompletaChat()">⛶</button>
+                    <button class="chat-ctrl-btn" id="chat-close" title="Cerrar" onclick="toggleChat()">✕</button>
+                </div>
+            </div>
+            <div id="chat-messages">
+                <div class="msg bot">¡Hola! ☕ ¿En qué te puedo ayudar hoy con nuestro menú, precios o pedidos?</div>
+            </div>
+            <div id="chat-sugerencias" aria-label="Consultas rápidas de la página">
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Menú')">📋 Menú</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Platillos')">🍽️ Platillos</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Bebidas')">🥤 Bebidas</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Galería')">📷 Galería</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Nosotros')">🌱 Nosotros</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Promociones')">🎁 Promociones</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Servicios')">🛎️ Servicios</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Métodos de pago')">💳 Pagos</button>
+                <button type="button" class="chat-chip-btn" onclick="enviarSugerenciaChat('Ubicación y horarios')">📍 Ubicación y horarios</button>
+            </div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Escribe tu duda..." onkeypress="handleKeyPress(event)">
+                <button id="chat-send" onclick="enviarMensajeIA()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGIN -->
+    <div id="modalLogin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 35px; border-radius: 15px; width: 320px; text-align: center; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
+            <span onclick="cerrarModalLogin()" style="position: absolute; top: 12px; right: 18px; cursor: pointer; font-size: 22px; color: #593724; font-weight: bold;">&times;</span>
+            
+            <h3 style="color: #38251e; margin-bottom: 15px; font-family: Georgia, serif;">Acceso al Sistema</h3>
+            
+            <input type="email" id="loginUsuario" placeholder="usuario@gmail.com" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 8px;" required>
+            <input type="password" id="loginPass" placeholder="Contraseña (mín. 6 caracteres)" minlength="6" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px;" required>
+            
+            <button onclick="procesarLogin()" class="boton" style="width: 100%; background-color: #38251e;">Ingresar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Aroma & Café · Hecho con ☕ y mucho amor.</p>
+    </footer>
+
+    <script>
+        // --- FUNCIONES DEL CHAT FLOTANTE CON IA ---
+        let enviandoMensajeIA = false;
+
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            const estaAbierto = win.style.display === 'flex';
+            win.style.display = estaAbierto ? 'none' : 'flex';
+            if (estaAbierto) {
+                win.classList.remove('pantalla-completa');
+                const btnExpand = document.getElementById('chat-expand');
+                if (btnExpand) btnExpand.textContent = '⛶';
+            } else {
+                const input = document.getElementById('chat-input');
+                if (input && !input.disabled) input.focus();
+            }
+        }
+
+        function togglePantallaCompletaChat() {
+            const win = document.getElementById('chat-window');
+            const btnExpand = document.getElementById('chat-expand');
+            if (win.style.display !== 'flex') {
+                win.style.display = 'flex';
+            }
+            const activa = win.classList.toggle('pantalla-completa');
+            if (btnExpand) {
+                btnExpand.textContent = activa ? '🗗' : '⛶';
+                btnExpand.title = activa ? 'Restaurar tamaño' : 'Pantalla completa';
+            }
+            const container = document.getElementById('chat-messages');
+            if (container) container.scrollTop = container.scrollHeight;
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                enviarMensajeIA();
+            }
+        }
+
+        function escaparHTML(texto) {
+            return String(texto || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function enviarSugerenciaChat(textoSugerido) {
+            const input = document.getElementById('chat-input');
+            if (!input || input.disabled) return;
+            input.value = textoSugerido;
+            enviarMensajeIA();
+        }
+
+        function formatearTextoChat(texto) {
+            const emojisExtra = ["☕", "🥐", "🍰", "🧋", "🍯", "🍓"];
+            let idxEmoji = 0;
+
+            let limpio = String(texto || "")
+                .replace(/\*\*/g, "")
+                .replace(/(?<!\w)\*(?!\w)/g, "")
+                .replace(/^#+\s*/gm, "")
+                .replace(/\s*(🍽️\s*Platillos)\s*/gi, "\n\n$1\n")
+                .replace(/\s*(🥤\s*Bebidas)\s*/gi, "\n\n$1\n")
+                .replace(/\s*((?:[^\s-]+\s*)?-{3,}\s*[^-\n]+?\s*-{3,}(?:\s*[^\s-]+)?)\s*/g, "\n\n$1\n")
+                .replace(/\n{4,}/g, "\n\n\n")
+                .trim();
+
+            const lineas = escaparHTML(limpio).split("\n");
+            return lineas.map(linea => {
+                let l = linea.trim();
+                if (!l) return "";
+
+                // Imagen de Galería: [IMG: /static/archivo.jpg]
+                const matchImg = l.match(/^\[IMG:\s*(\/static\/[a-zA-Z0-9._-]+)\]$/i);
+                if (matchImg) {
+                    return `<img src="${matchImg[1]}" alt="Galería Aroma & Café" class="chat-img-galeria" loading="lazy">`;
+                }
+
+                // Encabezados destacados para separar Platillos y Bebidas con el mismo cuadro
+                if (/^🍽️\s*Platillos$/i.test(l)) {
+                    return `<span class="chat-seccion-titulo">🍽️ Platillos</span>`;
+                }
+                if (/^🥤\s*Bebidas$/i.test(l)) {
+                    return `<span class="chat-seccion-titulo">🥤 Bebidas</span>`;
+                }
+
+                // Si es un emoji suelto que quedó solo en una línea, lo ignoramos para que no salga arriba
+                if (/^[^\w\s$#-]{1,4}$/.test(l)) {
+                    return "";
+                }
+
+                // Si es título ------ Nombre ------ (con o sin emojis)
+                if (/^(?:\S+\s+)?-{3,}.+-{3,}(?:\s+\S+)?$/.test(l)) {
+                    const sinEmojisPrevios = l.replace(/^[^\w-]+/, "").replace(/[^\w-]+$/, "").trim();
+                    const em = emojisExtra[idxEmoji % emojisExtra.length];
+                    idxEmoji++;
+                    return `<span class="chat-prod-titulo">${em} ${sinEmojisPrevios} ${em}</span>`;
+                }
+
+                if (/^\$\d+(?:[.,]\d+)?\s*(?:MXN)?$/i.test(l)) {
+                    return `<span class="chat-prod-precio">${l}</span>`;
+                }
+
+                return l;
+            }).filter(Boolean).join("<br>");
+        }
+
+        async function enviarMensajeIA() {
+            if (enviandoMensajeIA) return;
+
+            const input = document.getElementById('chat-input');
+            const container = document.getElementById('chat-messages');
+            const boton = document.getElementById('chat-send');
+            const texto = input.value.trim();
+
+            if (!texto) return;
+
+            enviandoMensajeIA = true;
+            input.disabled = true;
+            if (boton) boton.disabled = true;
+
+            container.innerHTML += `<div class="msg user">${escaparHTML(texto)}</div>`;
+            input.value = '';
+
+            const typingId = 'typing-' + Date.now();
+            container.innerHTML += `<div class="msg bot typing" id="${typingId}">Consultando...</div>`;
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mensaje: texto })
+                });
+                const data = await res.json();
+
+                const typingEl = document.getElementById(typingId);
+                if (typingEl) typingEl.remove();
+
+                const respuestaFormateada = formatearTextoChat(
+                    data.respuesta || "Por el momento no puedo responder dudas externas, pero con gusto te ayudo si preguntas cosas relacionadas con la página web de Aroma & Café."
+                );
+                container.innerHTML += `<div class="msg bot">${respuestaFormateada}</div>`;
+            } catch (error) {
+                const typingEl = document.getElementById(typingId);
+                if (typingEl) typingEl.remove();
+                container.innerHTML += `<div class="msg bot">Por el momento no puedo responder dudas externas, pero con gusto te ayudo si preguntas cosas relacionadas con la página web de Aroma & Café.</div>`;
+            } finally {
+                enviandoMensajeIA = false;
+                input.disabled = false;
+                if (boton) boton.disabled = false;
+                input.focus();
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        // --- VERIFICAR PROMOCIONES DESDE MONGODB ---
+        async function verificarPromosInicio() {
+            localStorage.removeItem("promosAroma");
+
+            if (sessionStorage.getItem("avisoPromosVisto") === "true") {
+                return;
+            }
+
+            try {
+                let res = await fetch("/api/promociones");
+                if (!res.ok) return;
+                
+                let promosServidor = await res.json();
+                const hoy = new Date().toISOString().split('T')[0];
+                let activas = promosServidor.filter(p => hoy >= p.fechaInicio && hoy <= p.fechaFin);
+
+                if (activas.length > 0) {
+                    let listaHTML = "";
+                    activas.forEach(p => {
+                        listaHTML += `<li>☕ <b>${escaparHTML(p.titulo)}</b> - $${Number(p.precio).toFixed(2)} MXN <i>(${escaparHTML(p.subtitulo || p.etiqueta || "")})</i></li>`;
+                    });
+                    document.getElementById("ulPromosInicio").innerHTML = listaHTML;
+                    document.getElementById("modalPromosInicio").style.display = "flex";
+                    
+                    sessionStorage.setItem("avisoPromosVisto", "true");
+                }
+            } catch (e) {
+                console.error("Error al consultar promociones en MongoDB:", e);
+            }
+        }
+
+        function cerrarModalPromos() {
+            document.getElementById("modalPromosInicio").style.display = "none";
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            let clienteActivo = sessionStorage.getItem("clienteActivo");
+            let adminAuth = sessionStorage.getItem("adminAuth");
+            let turnoEncargado = sessionStorage.getItem("turnoEncargado");
+            let marketingAuth = sessionStorage.getItem("marketingAuth");
+
+            if (clienteActivo || adminAuth || turnoEncargado || marketingAuth) {
+                let btn = document.getElementById("btnSesionNav");
+                let userDisplay = clienteActivo || (adminAuth ? "Admin (Jefe)" : (marketingAuth ? "Marketing" : `Encargado (${turnoEncargado})`));
+                btn.innerHTML = `👤 ${userDisplay}`;
+                
+                let contenedorAdmin = document.getElementById("opcionesAdminContainer");
+                if (adminAuth) {
+                    contenedorAdmin.innerHTML = `<a href="/admin" style="display: block; padding: 12px 15px; background: #faf3e7; color: #3e2723; text-decoration: none; font-size: 14px; font-weight: bold; border-bottom: 1px solid #f0e1cc;">👑 Ir al Panel (Jefe)</a>`;
+                } else if (marketingAuth) {
+                    contenedorAdmin.innerHTML = `<a href="/admin" style="display: block; padding: 12px 15px; background: #faf3e7; color: #3e2723; text-decoration: none; font-size: 14px; font-weight: bold; border-bottom: 1px solid #f0e1cc;">📢 Panel de Marketing</a>`;
+                } else if (turnoEncargado) {
+                    contenedorAdmin.innerHTML = `<a href="/admin" style="display: block; padding: 12px 15px; background: #faf3e7; color: #3e2723; text-decoration: none; font-size: 14px; font-weight: bold; border-bottom: 1px solid #f0e1cc;">📋 Panel Turno ${turnoEncargado}</a>`;
+                }
+            }
+
+            cargarComentarios();
+            verificarPromosInicio();
+        });
+
+        function abrirModalLogin() {
+            let clienteActivo = sessionStorage.getItem("clienteActivo");
+            let adminAuth = sessionStorage.getItem("adminAuth");
+            let turnoEncargado = sessionStorage.getItem("turnoEncargado");
+            let marketingAuth = sessionStorage.getItem("marketingAuth");
+
+            if (clienteActivo || adminAuth || turnoEncargado || marketingAuth) {
+                let menu = document.getElementById("menuDesplegable");
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+                return;
+            }
+            document.getElementById('modalLogin').style.display = 'flex';
+        }
+
+        function cerrarModalLogin() {
+            document.getElementById('modalLogin').style.display = 'none';
+        }
+
+        function manejarClickSesion(event) {
+            event.preventDefault();
+            abrirModalLogin();
+        }
+
+        function procesarLogin() {
+            let user = document.getElementById('loginUsuario').value.trim().toLowerCase();
+            let pass = document.getElementById('loginPass').value;
+
+            if (user === "" || pass === "") {
+                alert("Por favor ingresa usuario y contraseña.");
+                return;
+            }
+
+            if (!user.endsWith("@gmail.com")) {
+                alert("Acceso denegado. El usuario debe ser obligatoriamente un correo de Gmail (@gmail.com).");
+                return;
+            }
+
+            if (pass.length < 6) {
+                alert("⚠️ La contraseña debe tener un mínimo de 6 caracteres.");
+                return;
+            }
+
+            if (user === "amorycafe@gmail.com" && pass === "lara2026") {
+               sessionStorage.setItem("adminAuth", "true");
+               sessionStorage.removeItem("turnoEncargado");
+               sessionStorage.removeItem("marketingAuth");
+               sessionStorage.removeItem("clienteActivo");
+               alert("Bienvenido Administrador (Jefe)");
+               cerrarModalLogin();
+               setTimeout(() => { window.location.href = "/admin"; }, 100);
+            } 
+            else if (user === "matutino@gmail.com" && pass === "matutino2026") {
+                sessionStorage.setItem("turnoEncargado", "Matutino");
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("marketingAuth");
+                sessionStorage.removeItem("clienteActivo");
+                alert("Bienvenido Encargado - Turno Matutino");
+                cerrarModalLogin();
+                setTimeout(() => { window.location.href = "/admin"; }, 100);
+            } 
+            else if (user === "vespertino@gmail.com" && pass === "vespertino2026") {
+                sessionStorage.setItem("turnoEncargado", "Vespertino");
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("marketingAuth");
+                sessionStorage.removeItem("clienteActivo");
+                alert("Bienvenido Encargado - Turno Vespertino");
+                cerrarModalLogin();
+                setTimeout(() => { window.location.href = "/admin"; }, 100);
+            }
+            else if (user === "marketing@gmail.com" && pass === "market2026") {
+                sessionStorage.setItem("marketingAuth", "true");
+                sessionStorage.setItem("rol", "marketing");
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("turnoEncargado");
+                sessionStorage.removeItem("clienteActivo");
+                alert("Bienvenido al Panel de Marketing");
+                cerrarModalLogin();
+                setTimeout(() => { window.location.href = "/admin"; }, 100);
+            }
+            else {
+                sessionStorage.setItem("clienteActivo", user);
+                sessionStorage.removeItem("adminAuth");
+                sessionStorage.removeItem("turnoEncargado");
+                sessionStorage.removeItem("marketingAuth");
+                alert("Sesión iniciada con éxito");
+                cerrarModalLogin();
+                window.location.reload();
+            }
+        }
+
+        function cerrarSesionCliente() {
+            sessionStorage.removeItem("clienteActivo");
+            sessionStorage.removeItem("adminAuth");
+            sessionStorage.removeItem("turnoEncargado");
+            sessionStorage.removeItem("marketingAuth");
+            sessionStorage.removeItem("rol");
+            alert("Has cerrado sesión.");
+            window.location.href = "/";
+        }
+
+        function cambiarCuenta() {
+            sessionStorage.removeItem("clienteActivo");
+            sessionStorage.removeItem("adminAuth");
+            sessionStorage.removeItem("turnoEncargado");
+            sessionStorage.removeItem("marketingAuth");
+            sessionStorage.removeItem("rol");
+            
+            let menu = document.getElementById("menuDesplegable");
+            if (menu) menu.style.display = "none";
+            
+            document.getElementById('modalLogin').style.display = 'flex';
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('#btnSesionNav')) {
+                let menu = document.getElementById("menuDesplegable");
+                if (menu && menu.style.display === "block") {
+                    menu.style.display = "none";
+                }
+            }
+        }
+
+        async function cargarComentarios() {
+            try {
+                const respuesta = await fetch("/api/comentarios");
+                const comentarios = await respuesta.json();
+                
+                const contenedor = document.getElementById("lista-opiniones");
+                contenedor.innerHTML = "";
+                
+                let sumaCalificaciones = 0;
+                let totalComentarios = comentarios.length;
+
+                if (totalComentarios === 0) {
+                    document.getElementById("promedio-estrellas-num").innerText = "5.0";
+                    document.getElementById("estrellas-promedio-visual").innerText = "⭐⭐⭐⭐⭐";
+                    document.getElementById("texto-total-opiniones").innerText = "Basado en 0 opiniones";
+                    contenedor.innerHTML = "<p style='color: #777; text-align: center;'>Aún no hay comentarios. ¡Sé el primero en opinar!</p>";
+                    return;
+                }
+
+                comentarios.forEach(c => {
+                    sumaCalificaciones += Number(c.calificacion || 5);
+                });
+
+                let promedio = (sumaCalificaciones / totalComentarios).toFixed(1);
+                document.getElementById("promedio-estrellas-num").innerText = promedio;
+                document.getElementById("texto-total-opiniones").innerText = `Basado en ${totalComentarios} ${totalComentarios === 1 ? 'opinión' : 'opiniones'}`;
+                
+                let estrellasRedondeadas = Math.round(promedio);
+                document.getElementById("estrellas-promedio-visual").innerText = "⭐".repeat(estrellasRedondeadas);
+
+                comentarios.forEach(c => {
+                    const estrellas = "⭐".repeat(c.calificacion || 5);
+                    
+                    let respuestaHTML = "";
+                    if (c.respuesta) {
+                        respuestaHTML = `
+                            <div style="margin-top: 12px; padding: 10px 14px; background: #f0f7ff; border-radius: 8px; border-left: 3px solid #3498db; font-size: 0.9em; color: #333;">
+                                <b style="color: #2980b9;">Respuesta de Aroma & Café:</b> ${escaparHTML(c.respuesta)}
+                            </div>
+                        `;
+                    }
+                    
+                    let correoMostrar = c.correo || "usuario desconocido";
+                    
+                    const div = document.createElement("div");
+                    div.className = "tarjeta-opinion";
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 6px;">
+                            <strong style="color: #38251e;">${escaparHTML(correoMostrar)}</strong>
+                            <span style="color: #888; font-size: 0.85em;">${escaparHTML(c.fecha)}</span>
+                        </div>
+                        <div style="color: #e67e22; margin-bottom: 6px; font-size: 1.1em;">${estrellas}</div>
+                        <p style="margin: 0; color: #555; word-break: break-word; line-height: 1.5;">${escaparHTML(c.comentario)}</p>
+                        ${respuestaHTML}
+                    `;
+                    contenedor.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error al cargar los comentarios:", error);
+            }
+        }
+
+        document.getElementById("form-comentario").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const calificacion = document.getElementById("calificacion").value;
+            const comentario = document.getElementById("texto-comentario").value;
+            
+            let correoUsuario = sessionStorage.getItem("clienteActivo");
+            if (!correoUsuario) {
+                if (sessionStorage.getItem("adminAuth")) correoUsuario = "amorycafe@gmail.com";
+                else if (sessionStorage.getItem("turnoEncargado") === "Matutino") correoUsuario = "matutino@gmail.com";
+                else if (sessionStorage.getItem("turnoEncargado") === "Vespertino") correoUsuario = "vespertino@gmail.com";
+                else if (sessionStorage.getItem("marketingAuth")) correoUsuario = "marketing@gmail.com";
+                else correoUsuario = "usuario desconocido";
+            }
+
+            try {
+                const res = await fetch("/api/comentarios", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        correo: correoUsuario,
+                        calificacion: Number(calificacion),
+                        comentario: comentario
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.mensaje || "¡Comentario guardado con éxito!");
+                    document.getElementById("texto-comentario").value = "";
+                    cargarComentarios();
+                } else {
+                    alert(data.error || "No se pudo guardar el comentario.");
+                }
+            } catch (error) {
+                console.error("Error al enviar comentario:", error);
+                alert("Error de conexión al enviar el comentario.");
+            }
+        });
+    </script>
+</body>
+</html>
